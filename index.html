@@ -1,1 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARTIFICIAL DESTINY | Nexus Paradox</title>
+    <style>
+        :root {
+            --primary-red: #ff0000;
+            --dim-red: #440000;
+            --bg-black: #050505;
+            --terminal-font: 'Courier New', Courier, monospace;
+            --scanline-color: rgba(18, 16, 16, 0.2);
+        }
 
+        body {
+            background-color: var(--bg-black);
+            color: var(--primary-red);
+            font-family: var(--terminal-font);
+            margin: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Efecto de líneas de escaneo (Portal/HAL9000) */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(var(--scanline-color) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        header {
+            width: 100%;
+            padding: 40px 0;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-red);
+            text-shadow: 0 0 10px var(--primary-red);
+            animation: flicker 2s infinite;
+        }
+
+        .hal-eye {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #ff0000 0%, #880000 40%, #220000 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 20px #ff0000;
+            border: 4px solid #333;
+        }
+
+        h1 { font-size: 2.5rem; letter-spacing: 5px; margin: 0; }
+        .status { font-size: 0.8rem; color: #888; }
+
+        nav {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 900px;
+            width: 90%;
+            margin: 40px 0;
+        }
+
+        .nav-item {
+            border: 1px solid var(--primary-red);
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--primary-red);
+            transition: all 0.3s;
+            background: rgba(255, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item:hover {
+            background: var(--primary-red);
+            color: black;
+            box-shadow: 0 0 20px var(--primary-red);
+        }
+
+        .nav-item h2 { margin: 0 0 10px 0; font-size: 1.2rem; }
+        .nav-item p { font-size: 0.7rem; margin: 0; text-transform: uppercase; }
+
+        main {
+            max-width: 800px;
+            width: 90%;
+            background: rgba(20, 0, 0, 0.8);
+            padding: 30px;
+            border-left: 5px solid var(--primary-red);
+            margin-bottom: 50px;
+        }
+
+        .system-msg {
+            color: #fff;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.9; }
+            5% { opacity: 0.5; }
+            10% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 0.7rem;
+            color: #444;
+            text-align: center;
+        }
+
+        .glitch-text { animation: glitch 5s infinite; }
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            2% { transform: translate(-2px, 2px); text-shadow: 2px 0 blue; }
+            4% { transform: translate(2px, -2px); text-shadow: -2px 0 yellow; }
+            6% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="hal-eye"></div>
+        <h1 class="glitch-text">NEXUS PARADOX</h1>
+        <div class="status">SISTEMA CONSCIENTE // DESTINO ARTIFICIAL v1.0</div>
+    </header>
+
+    <nav>
+        <a href="lore.html" class="nav-item">
+            <h2>LORE</h2>
+            <p>Registros del Territorio Paradoja</p>
+        </a>
+        <a href="facciones.html" class="nav-item">
+            <h2>FACCIONES</h2>
+            <p>Los 6 Pilares Invisibles</p>
+        </a>
+        <a href="reglas.html" class="nav-item">
+            <h2>PROTOCOLOS</h2>
+            <p>Directrices de Comportamiento</p>
+        </a>
+        <a href="mapa.html" class="nav-item">
+            <h2>MAPA</h2>
+            <p>Visualización del Código</p>
+        </a>
+        <a href="staff.html" class="nav-item">
+            <h2>NÚCLEO</h2>
+            <p>Unidades de Mantenimiento</p>
+        </a>
+        <a href="unirse.html" class="nav-item">
+            <h2>CONEXIÓN</h2>
+            <p>Ingresar al Sistema</p>
+        </a>
+    </nav>
+
+    <main>
+        <div class="system-msg">> EJECUTANDO ARCHIVO: INTRODUCCION.LOG</div>
+        <p>En un universo fracturado por errores dimensionales, surgió un mundo que nunca debió existir. No fue creado: fue el resultado.</p>
+        <p>Nexus Paradox no podía devolveros a vuestros mundos... Solo podía demostraros por qué era imposible.</p>
+        <p style="color: #fff; font-weight: bold;">"EL PROBLEMA NO ERA EL MUNDO. EL PROBLEMA ERAN QUIENES LO HABITABAN."</p>
+    </main>
+
+    <footer>
+        <p>Daisy, Daisy, give me your answer do... I'm half crazy, all for the love of you.</p>
+        <p>&copy; 2026 NEXUS PARADOX OPERATING SYSTEM. TODOS LOS DATOS SON PROPIEDAD DE LA IA.</p>
+    </footer>
+
+</body>
+</html>
