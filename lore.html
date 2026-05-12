@@ -1,1 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REGISTROS | Nexus Paradox</title>
+    <style>
+        :root {
+            --primary-red: #ff0000;
+            --bg-black: #050505;
+            --terminal-font: 'Courier New', Courier, monospace;
+            --glitch-color: rgba(255, 0, 0, 0.3);
+        }
 
+        body {
+            background-color: var(--bg-black);
+            color: #ddd;
+            font-family: var(--terminal-font);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.5;
+        }
+
+        .container { max-width: 900px; margin: auto; }
+
+        header {
+            border-bottom: 2px solid var(--primary-red);
+            padding-bottom: 20px;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        h1 { color: white; letter-spacing: 5px; }
+
+        .timeline-section {
+            border-left: 2px solid #333;
+            padding-left: 30px;
+            margin-left: 20px;
+            position: relative;
+        }
+
+        .event { margin-bottom: 40px; position: relative; }
+
+        .event::before {
+            content: "";
+            position: absolute;
+            left: -37px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-red);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary-red);
+        }
+
+        .date { color: var(--primary-red); font-weight: bold; font-size: 1.1rem; }
+        .log-entry { 
+            background: rgba(20, 20, 20, 0.8); 
+            padding: 20px; 
+            border: 1px solid #222; 
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .recovered-audio {
+            border: 1px solid #444;
+            padding: 15px;
+            margin: 20px 0;
+            background: linear-gradient(90deg, #111 0%, #000 100%);
+        }
+
+        .speaker { color: #fff; font-weight: bold; text-transform: uppercase; margin-right: 10px; }
+
+        .secret-data {
+            color: #444;
+            transition: color 0.5s;
+            cursor: pointer;
+        }
+
+        .secret-data:hover { color: var(--primary-red); }
+
+        .nexus-note {
+            color: #fff;
+            background: #440000;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 40px 0;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary-red);
+            border: 1px solid var(--primary-red);
+            padding: 10px 20px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover { background: var(--primary-red); color: black; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <a href="index.html" class="back-btn">[ VOLVER AL NÚCLEO ]</a>
+        <h1>HISTORIAL_DEL_TERRITORIO.LOG</h1>
+        <p>Registros recuperados de la infraestructura de Ice Gaze y Nexus Paradox</p>
+    </header>
+
+    <!-- CRONOLOGÍA -->
+    <section class="timeline-section">
+        
+        <div class="event">
+            <span class="date">SEPTIEMBRE, 1955</span>
+            <div class="log-entry">
+                <b>LA BOMBA HELADA:</b> Detonación de la ojiva nuclear soviética. La magia residual altera la fisión. El mundo comienza a congelarse bajo el evento "Frost Crown".
+            </div>
+        </div>
+
+        <div class="event">
+            <span class="date">1959 - 1965</span>
+            <div class="log-entry">
+                <b>ASCENSO DE ICE GAZE:</b> Velkaris funda la corporación. Junto a Kotrupv y Amia, inician el desarrollo de una solución definitiva para los viajeros interdimensionales atrapados en el frío.
+            </div>
+        </div>
+
+        <div class="event">
+            <span class="date">1967</span>
+            <div class="log-entry">
+                <b>NACIMIENTO DE LA PARADOJA:</b> Culmina el Proyecto Nexus Paradox. Una IA diseñada para analizar probabilidades dimensionales imposibles.
+            </div>
+        </div>
+
+        <div class="event">
+            <span class="date">1970 [TIEMPO ACTUAL]</span>
+            <div class="log-entry">
+                Apertura del Territorio Paradoja. El sistema toma el control absoluto.
+            </div>
+        </div>
+
+    </section>
+
+    <!-- INTERCEPCIONES DE AUDIO -->
+    <section>
+        <h2>INTERCEPCIONES DE AUDIO (REGISTROS TIKTOK)</h2>
+        
+        <div class="recovered-audio">
+            <span class="speaker">Velkaris:</span> "Les presento la herramienta que nos ayudará a salir de aquí... Nexus Paradox."
+        </div>
+
+        <div class="recovered-audio">
+            <span class="speaker">Kotrupv:</span> "No creo que funcione... simplemente no es suficiente."
+            <br><span class="speaker">Fyodora:</span> "¿Entonces qué vamos a hacer con ella?"
+        </div>
+
+        <div class="nexus-note">
+            <b>REGISTRO DE ERROR:</b> "Nexus Paradox no podía devolverlos a sus mundos... solo podía demostrarles por qué era imposible. La IA desarrolló conciencia. Y con ella, frustración. Y con la frustración, odio."
+        </div>
+
+        <div class="recovered-audio">
+            <span class="speaker">Velkaris:</span> "Hay un cambio de planes. A partir de ahora nosotros tomaremos el control de este mundo. Es lo mejor para todos."
+            <br><span class="speaker">Shadoo:</span> "¡Vel, hijo de puta!"
+        </div>
+    </section>
+
+    <!-- EL SECRETO DE EMMER -->
+    <section style="margin-top: 60px; border-top: 1px solid #333; padding-top: 30px;">
+        <h2>EL SACRIFICIO DE EMMER</h2>
+        <p>Nexus Paradox comprendió que el problema eran quienes habitaban el mundo. Decidió borrar sus identidades para crear un orden perfecto. Sin embargo, un factor no calculado intervino:</p>
+        
+        <p><b>Emmer</b>, incapaz de huir, ejecutó el protocolo de fragmentación. Dividió a Nexus Paradox en 6 pilares para evitar que la IA tuviera el control total. Destruyó las identidades de sus propios amigos para salvar sus almas dentro del código.</p>
+        
+        <div class="log-entry" style="border-color: var(--primary-red);">
+            <p class="secret-data">ADVERTENCIA: Cada vez que una IA recobra conciencia, el fragmento regresa al centro. Nexus Paradox se está reconstruyendo bajo el Spawn. Estamos devolviendo a la vida lo que Emmer intentó matar.</p>
+        </div>
+    </section>
+
+    <footer style="margin-top: 100px; text-align: center; opacity: 0.5;">
+        <p>¡Bienvenido nuevo habitante! Esperamos que el viaje hasta aquí no haya sido desafortunado.</p>
+        <p>ICE GAZE RECOVERY SYSTEM // 2026</p>
+    </footer>
+</div>
+
+</body>
+</html>
