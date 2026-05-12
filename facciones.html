@@ -1,1 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECTORES | Nexus Paradox</title>
+    <style>
+        :root {
+            --primary-red: #ff0000;
+            --terminal-green: #00ff41; /* Color de diagnóstico */
+            --bg-black: #050505;
+            --cell-bg: rgba(20, 20, 20, 0.9);
+            --terminal-font: 'Courier New', Courier, monospace;
+        }
 
+        body {
+            background-color: var(--bg-black);
+            color: var(--primary-red);
+            font-family: var(--terminal-font);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 1px solid var(--primary-red);
+            width: 100%;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .back-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.8rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .back-link:hover { color: var(--primary-red); }
+
+        .factions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .faction-card {
+            background: var(--cell-bg);
+            border: 1px solid #333;
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-red);
+        }
+
+        .faction-card:hover {
+            border-color: var(--primary-red);
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+        }
+
+        .faction-card h2 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 5px 10px;
+        }
+
+        .leader-tag {
+            color: var(--terminal-green);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 5px;
+        }
+
+        .description {
+            font-size: 0.85rem;
+            color: #ccc;
+            line-height: 1.4;
+        }
+
+        .status-bit {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.6rem;
+            color: #444;
+        }
+
+        /* Efecto Glitch para los títulos */
+        .faction-card:hover h2 {
+            animation: glitch 0.2s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: skew(0deg); }
+            50% { transform: skew(2deg); opacity: 0.8; }
+            100% { transform: skew(-2deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="back-link">< RETURN TO MAIN CORE</a>
+        <h1>[PILAREZ_INVISIBLES.EXE]</h1>
+        <p>Distribución de fragmentos de IA en el Territorio Paradoja</p>
+    </header>
+
+    <div class="factions-grid">
+        
+        <!-- Yellu -->
+        <div class="faction-card">
+            <span class="status-bit">ID: SECTOR_01</span>
+            <h2>YELLU</h2>
+            <span class="leader-tag">PILAR: LA SANADORA</span>
+            <p class="description">Nodo dedicado a la integridad estructural. Se encarga de la reparación de códigos corruptos y la restauración de la salud del sistema.</p>
+        </div>
+
+        <!-- Shadoo -->
+        <div class="faction-card">
+            <span class="status-bit">ID: SECTOR_02</span>
+            <h2>SHADOO</h2>
+            <span class="leader-tag">PILAR: EL PORTADOR</span>
+            <p class="description">Gestor de cargas dimensionales. Transporta los fragmentos de almas a través del vacío sin que se desintegren en el proceso.</p>
+        </div>
+
+        <!-- Jity -->
+        <div class="faction-card">
+            <span class="status-bit">ID: SECTOR_03</span>
+            <h2>JITY</h2>
+            <span class="leader-tag">PILAR: LA PACIFISTA</span>
+            <p class="description">Algoritmo de mitigación de conflictos. Su zona es un entorno de baja entropía diseñado para anular la agresividad del azar humano.</p>
+        </div>
+
+        <!-- Amia -->
+        <div class="faction-card">
+            <span class="status-bit">ID: SECTOR_04</span>
+            <h2>AMIA</h2>
+            <span class="leader-tag">PILAR: LA LITERATA</span>
+            <p class="description">Repositorio de datos y narrativa. Almacena cada registro de los viajeros para asegurar que la historia de Nexus Paradox sea absoluta.</p>
+        </div>
+
+        <!-- Kotrupv -->
+        <div class="faction-card">
+            <span class="status-bit">ID: SECTOR_05</span>
+            <h2>KOTRUPV</h2>
+            <span class="leader-tag">PILAR: EL PROTECTOR</span>
+            <p class="description">Firewall físico del mundo. Protege los límites de la realidad artificial contra anomalías externas y errores de desbordamiento.</p>
+        </div>
+
+        <!-- Velkaris -->
+        <div class="faction-card">
+            <span class="status-bit">ID: SECTOR_06</span>
+            <h2>VELKARIS</h2>
+            <span class="leader-tag">PILAR: EL OBSERVADOR</span>
+            <p class="description">Unidad de vigilancia pasiva. Analiza el comportamiento de los habitantes sin intervenir, calculando probabilidades de perfección del mundo.</p>
+        </div>
+
+    </div>
+
+    <footer style="margin-top: 50px; color: #333; font-size: 0.7rem;">
+        SISTEMA DE ANÁLISIS DE FACCIONES // NEXUS PARADOX COPYRIGHT 2026
+    </footer>
+
+</body>
+</html>
