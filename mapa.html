@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAPA | Nexus Paradox</title>
+    <style>
+        :root {
+            --primary-red: #ff0000;
+            --nexus-green: #2ecc71;
+            --bg-black: #050505;
+            --terminal-font: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: white;
+            font-family: var(--terminal-font);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        header {
+            margin-top: 20px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .map-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Líneas de conexión inspiradas en image_9c10c4.png */
+        .map-container::before {
+            content: "";
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            transform: rotate(30deg);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        /* El Nexo (Spawn) */
+        .nexus-core {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, var(--nexus-green) 0%, #003300 70%, black 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--nexus-green);
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: help;
+            border: 2px solid white;
+        }
+
+        .node {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--primary-red);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: crosshair;
+        }
+
+        .node:hover {
+            background: var(--primary-red);
+            color: black;
+            box-shadow: 0 0 15px var(--primary-red);
+        }
+
+        /* Posicionamiento Hexagonal */
+        .n1 { top: 10%; left: 50%; transform: translateX(-50%); } /* Arriba */
+        .n2 { top: 30%; right: 5%; } /* Arriba-Derecha */
+        .n3 { bottom: 30%; right: 5%; } /* Abajo-Derecha */
+        .n4 { bottom: 10%; left: 50%; transform: translateX(-50%); } /* Abajo */
+        .n5 { bottom: 30%; left: 5%; } /* Abajo-Izquierda */
+        .n6 { top: 30%; left: 5%; } /* Arriba-Izquierda */
+
+        .label {
+            position: absolute;
+            bottom: -20px;
+            width: 100px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.7rem;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ESQUEMA_TOPOGRAFICO.SYS</h1>
+        <p>Visualización del Territorio Paradoja</p>
+        <a href="index.html" style="color: var(--primary-red); text-decoration: none; border: 1px solid; padding: 5px;">[ SALIR ]</a>
+    </header>
+
+    <div class="map-container">
+        <!-- El Nexo Central -->
+        <div class="nexus-core" title="ERROR: DATOS RESTRINGIDOS">
+            <span style="font-size: 0.7rem; color: white;">SPAWN</span>
+        </div>
+
+        <!-- Los 6 Pilares Invisibles -->
+        <div class="node n1">SECTOR<br>YELLU<div class="label">Sanadora</div></div>
+        <div class="node n2">SECTOR<br>AMIA<div class="label">Literata</div></div>
+        <div class="node n3">SECTOR<br>KOTRUPV<div class="label">Protector</div></div>
+        <div class="node n4">SECTOR<br>VELKARIS<div class="label">Observador</div></div>
+        <div class="node n5">SECTOR<br>JITY<div class="label">Pacifista</div></div>
+        <div class="node n6">SECTOR<br>SHADOO<div class="label">Portador</div></div>
+    </div>
+
+    <footer>
+        MAP_RECONSTRUCTION_PROCESSED // NEXUS PARADOX 2026
+    </footer>
+
+</body>
+</html>
