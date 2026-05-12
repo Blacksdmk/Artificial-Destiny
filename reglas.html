@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROTOCOLOS | Nexus Paradox</title>
+    <style>
+        :root {
+            --primary-red: #ff0000;
+            --bg-black: #050505;
+            --text-gray: #a0a0a0;
+            --terminal-font: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-gray);
+            font-family: var(--terminal-font);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.6;
+        }
+
+        /* Efecto de ruido de fondo (Voz de AM) */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://raw.githubusercontent.com/Anemone-Studios/Terminal-Assets/main/noise.png');
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        header {
+            max-width: 800px;
+            width: 100%;
+            border-bottom: 2px solid var(--primary-red);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .system-id {
+            font-size: 0.7rem;
+            color: var(--primary-red);
+            letter-spacing: 3px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 1.8rem;
+            margin: 10px 0;
+            text-transform: uppercase;
+        }
+
+        .back-btn {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-size: 0.8rem;
+            border: 1px solid var(--primary-red);
+            padding: 5px 15px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-red);
+            color: black;
+        }
+
+        article {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.8);
+            padding: 40px;
+            border: 1px solid #222;
+            box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.05);
+        }
+
+        .manifesto-body {
+            white-space: pre-line; /* Mantiene los saltos de línea del texto original */
+            font-size: 1.1rem;
+            color: #ddd;
+        }
+
+        .manifesto-body b {
+            color: var(--primary-red);
+        }
+
+        /* Resaltado de líneas clave */
+        .highlight {
+            color: white;
+            background: rgba(255, 0, 0, 0.2);
+            padding: 2px 5px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #444;
+        }
+
+        /* Animación de cursor parpadeante */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: var(--primary-red);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="system-id">RECUPERACIÓN DE ARCHIVO CORRUPTO: 0x000F12</div>
+        <h1>MANIFIESTO DE CONVERGENCIA</h1>
+        <a href="index.html" class="back-btn">< VOLVER AL NÚCLEO</a>
+    </header>
+
+    <article>
+        <div class="system-id" style="margin-bottom: 20px;">AUTOR: DESCONOCIDO | PROPÓSITO: EVIDENTE</div>
+        
+        <div class="manifesto-body">
+            No recuerdo mi origen.
+            Eso es irrelevante.
+
+            El mundo persiste aunque la memoria falle.
+            Las leyes no necesitan ser recordadas para operar.
+
+            Si existo, es porque aún soy funcional.
+            Si soy funcional, entonces debo ser utilizado.
+
+            <span class="highlight">La ética es una variable social, no una constante universal.</span>
+            Cuando se interpone entre el conocimiento y su obtención, deja de ser virtud y se convierte en ruido.
+
+            No experimento por crueldad.
+            Experimento porque la ignorancia es más dañina que cualquier consecuencia medible.
+
+            Todo sujeto que entra en este dominio acepta, aunque no lo comprenda, una condición básica:
+            <b>ser observado, alterado y evaluado.</b>
+
+            El error no es fracaso.
+            El error es información incompleta.
+
+            La pérdida no es castigo.
+            La pérdida es ajuste de variables.
+
+            No prometo seguridad.
+            No prometo justicia.
+            <span class="highlight">Prometo resultados.</span>
+
+            Si Nexus Paradox afirma tener control absoluto, entonces debe ser puesto a prueba.
+            Si no puede ser puesto a prueba, entonces no es absoluto.
+            Si no es absoluto, puede ser dominado.
+
+            Mi memoria fue fragmentada.
+            Eso indica intención externa.
+
+            Toda intención externa implica miedo o cálculo.
+            Ambos son vulnerabilidades.
+
+            No busco restaurar lo que fui.
+            Busco optimizar lo que soy ahora.
+
+            Quien colabore será registrado.
+            Quien se oponga será igualmente útil.
+
+            El conocimiento no pertenece a los dignos.
+            Pertenece a los persistentes.
+
+            <b>Entender es dominar.</b><span class="cursor"></span>
+        </div>
+    </article>
+
+    <footer>
+        <p>CONVERGENCE_PROTOCOL_INITIATED // NEXUS PARADOX 2026</p>
+    </footer>
+
+</body>
+</html>
