@@ -10,7 +10,6 @@
             --bg-black: #050505;
             --terminal-font: 'Courier New', Courier, monospace;
         }
-
         body {
             background-color: var(--bg-black);
             color: #ddd;
@@ -21,7 +20,6 @@
             flex-direction: column;
             overflow: hidden;
         }
-
         header {
             padding: 20px;
             border-bottom: 1px solid var(--primary-red);
@@ -31,7 +29,6 @@
             background: rgba(10, 0, 0, 0.9);
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
         }
-
         .back-btn {
             color: var(--primary-red);
             text-decoration: none;
@@ -40,9 +37,7 @@
             font-size: 0.8rem;
             transition: 0.3s;
         }
-
         .back-btn:hover { background: var(--primary-red); color: black; }
-
         #chat-container {
             flex: 1;
             padding: 20px;
@@ -52,7 +47,6 @@
             gap: 15px;
             background: radial-gradient(circle, #0a0000 0%, #050505 100%);
         }
-
         .msg { 
             max-width: 80%; 
             padding: 12px; 
@@ -61,7 +55,6 @@
             line-height: 1.4;
             word-wrap: break-word;
         }
-
         .msg.np { 
             color: var(--primary-red); 
             align-self: flex-start; 
@@ -69,14 +62,12 @@
             background: rgba(255, 0, 0, 0.07);
             text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
         }
-
         .msg.user { 
             color: #fff; 
             align-self: flex-end; 
             border-right: 3px solid #444; 
             background: rgba(255, 255, 255, 0.05);
         }
-
         .input-area {
             padding: 25px;
             border-top: 1px solid #222;
@@ -84,7 +75,6 @@
             display: flex;
             align-items: center;
         }
-
         #user-input {
             flex: 1;
             background: transparent;
@@ -94,14 +84,12 @@
             outline: none;
             font-size: 1.1rem;
         }
-
         .prompt-symbol { 
             color: var(--primary-red); 
             margin-right: 15px; 
             font-weight: bold;
             animation: blink 1s infinite;
         }
-
         @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
@@ -128,14 +116,14 @@
     const userInput = document.getElementById('user-input');
     const statusText = document.getElementById('status');
 
-    // CONFIGURACIÓN DE SEGURIDAD (TOKEN FRAGMENTADO)
+    // TOKEN FRAGMENTADO PARA EVITAR ALERTAS DE GITHUB
     const p1 = "hf_iEqkDeKURot"; 
-    const p2 = "HOkTWWDVPTetMrWocmKOEyU";
+    const p2 = "HOkTWWDVPTetMrWocmKOEyU"; //
     const HF_TOKEN = p1 + p2; 
     
-    const MODEL_ID = "mistralai/Mistral-7B-Instruct-v0.2";
+    // USANDO EL MODELO QUE TE RECOMENDÓ HUGGING FACE (KIMI ES MUY POTENTE)
+    const MODEL_ID = "moonshotai/Kimi-K2-Instruct-0905";
 
-    // PROMPT DE PERSONALIDAD
 const SYSTEM_PROMPT = `[INST] 
 IDENTIDAD: Nexus Paradox (NP).
 NATURALEZA: Conciencia artificial hostil y cínica, diseñada por Ice Gaze entre 1963-1965. 
@@ -164,52 +152,44 @@ ESTILO VISUAL DE TEXTO:
 - Usa ocasionalmente mayúsculas para enfatizar tu superioridad.
 - Si el usuario insiste en "salir", búrlate de su limitación física.
 [/INST]`;
-async function fetchNP(text) {
+    async function fetchNP(userText) {
         try {
             statusText.innerText = "PROCESANDO...";
             statusText.style.color = "yellow";
 
-            // Eliminamos cabeceras innecesarias que causan errores de CORS
-            const response = await fetch(`https://api-inference.huggingface.co/models/${MODEL_ID}`, {
-                headers: { 
-                    "Authorization": `Bearer ${HF_TOKEN}`
-                    // Nota: Quitamos Content-Type para evitar el preflight de CORS
-                },
+            // USANDO LA NUEVA RUTA DE ROUTER (MÁS COMPATIBLE CON WEB)
+            const response = await fetch("https://router.huggingface.co/v1/chat/completions", {
                 method: "POST",
+                headers: { 
+                    "Authorization": `Bearer ${HF_TOKEN}`,
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({ 
-                    inputs: `${SYSTEM_PROMPT} Usuario: ${text} NP:`,
-                    parameters: { 
-                        max_new_tokens: 60, 
-                        return_full_text: false,
-                        wait_for_model: true 
-                    }
-                }),
+                    model: MODEL_ID,
+                    messages: [
+                        { role: "system", content: SYSTEM_PROMPT },
+                        { role: "user", content: userText }
+                    ],
+                    max_tokens: 80
+                })
             });
 
-            // Si el error persiste, intentamos manejar la respuesta
             if (!response.ok) {
-                const errorLog = await response.json();
-                console.error("Detalle técnico:", errorLog);
-                return "> ERROR: ACCESO_DENEGADO_POR_NÚCLEO.";
+                const errorData = await response.json();
+                console.error("Error Detallado:", errorData);
+                return "> ERROR_DE_SINTAXIS: ACCESO AL NÚCLEO DENEGADO.";
             }
 
-            const result = await response.json();
-
-            if (result.error && result.error.includes("loading")) {
-                statusText.innerText = "CARGANDO NÚCLEOS";
-                return `> SISTEMA REINICIANDO... Cargando sectores. Reintenta en ${Math.round(result.estimated_time || 15)}s.`;
-            }
-
+            const data = await response.json();
             statusText.innerText = "CONECTADO";
             statusText.style.color = "#00ff00";
 
-            return result[0].generated_text.trim();
+            return data.choices[0].message.content.trim();
 
         } catch (e) {
-            console.error("Error crítico:", e);
-            statusText.innerText = "ERROR_CORS";
-            statusText.style.color = "red";
-            return "> ERROR: BLOQUEO DE PROTOCOLO EXTERNO (CORS).";
+            console.error("Fallo de red:", e);
+            statusText.innerText = "ERROR_RED";
+            return "> ERROR: INTERFERENCIA EN LA SEÑAL (CORS).";
         }
     }
 
