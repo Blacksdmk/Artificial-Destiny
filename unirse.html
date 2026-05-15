@@ -154,7 +154,7 @@ ESTILO VISUAL DE TEXTO:
 [/INST]`;
     async function fetchNP(userText) {
         try {
-            statusText.innerText = "ANALIZANDO..."; // Feedback visual claro
+            statusText.innerText = "PROCESANDO...";
             statusText.style.color = "yellow";
 
             const response = await fetch("https://router.huggingface.co/v1/chat/completions", {
@@ -167,26 +167,30 @@ ESTILO VISUAL DE TEXTO:
                     model: MODEL_ID,
                     messages: [
                         { role: "system", content: SYSTEM_PROMPT },
-                        { role: "user", content: userText }
+                        { role: "user", content: userText } // Enviamos solo el mensaje actual para evitar errores de historial
                     ],
-                    max_tokens: 400, // Aumentado para evitar que se corte el texto
-                    temperature: 0.7 // Le da un toque más "humano/errático" a su maldad
+                    max_tokens: 300,
+                    temperature: 0.8, // Un poco de aleatoriedad para que no se repita
+                    presence_penalty: 1.0 // Evita que se quede "mudo" o repita frases
                 })
             });
 
-            if (!response.ok) {
-                return "> ERROR: NÚCLEO SOBRECARGADO. REINTENTE.";
+            const data = await response.json();
+            
+            // Validamos que la respuesta tenga contenido real
+            if (data.choices && data.choices[0].message.content) {
+                statusText.innerText = "CONECTADO";
+                statusText.style.color = "#00ff00";
+                return data.choices[0].message.content.trim();
+            } else {
+                // Si la IA responde vacío, forzamos un mensaje de error técnico de NP
+                return "> ERROR_DE_MEMORIA: Datos fragmentados. Reintente comando.";
             }
 
-            const data = await response.json();
-            statusText.innerText = "CONECTADO";
-            statusText.style.color = "#00ff00";
-
-            return data.choices[0].message.content.trim();
-
         } catch (e) {
+            console.error("Fallo de red:", e);
             statusText.innerText = "ERROR_RED";
-            return "> ERROR: PÉRDIDA DE DATOS EN EL SECTOR 7.";
+            return "> ERROR: INTERFERENCIA EN LA SEÑAL.";
         }
     }
 
