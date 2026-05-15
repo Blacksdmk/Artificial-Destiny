@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONEXIÓN | Nexus Paradox</title>
+    <style>
+        :root {
+            --primary-red: #ff0000;
+            --bg-black: #050505;
+            --terminal-font: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: #ddd;
+            font-family: var(--terminal-font);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 20px;
+            border-bottom: 1px solid var(--primary-red);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 0, 0, 0.9);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+        }
+
+        .back-btn {
+            color: var(--primary-red);
+            text-decoration: none;
+            border: 1px solid var(--primary-red);
+            padding: 5px 15px;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-red);
+            color: black;
+        }
+
+        /* Contenedor del Chat */
+        #chat-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: radial-gradient(circle, #0a0000 0%, #050505 100%);
+        }
+
+        /* Estilo de los mensajes */
+        .msg { 
+            max-width: 80%; 
+            padding: 12px; 
+            border-radius: 2px; 
+            font-size: 0.9rem; 
+            line-height: 1.4;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .msg.np { 
+            color: var(--primary-red); 
+            align-self: flex-start; 
+            border-left: 3px solid var(--primary-red); 
+            background: rgba(255, 0, 0, 0.07);
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        .msg.user { 
+            color: #fff; 
+            align-self: flex-end; 
+            border-right: 3px solid #444; 
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Área de entrada */
+        .input-area {
+            padding: 25px;
+            border-top: 1px solid #222;
+            background: #080808;
+            display: flex;
+            align-items: center;
+        }
+
+        #user-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--primary-red);
+            font-family: inherit;
+            outline: none;
+            font-size: 1.1rem;
+            caret-color: var(--primary-red);
+        }
+
+        .prompt-symbol { 
+            color: var(--primary-red); 
+            margin-right: 15px; 
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Scrollbar Personalizada */
+        #chat-container::-webkit-scrollbar { width: 5px; }
+        #chat-container::-webkit-scrollbar-track { background: #050505; }
+        #chat-container::-webkit-scrollbar-thumb { background: #333; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div style="color: var(--primary-red); font-size: 0.75rem; letter-spacing: 1px;">
+        ESTADO: <span style="color: #00ff00;">CONECTADO</span> // NÚCLEO: NEXUS_PARADOX_v1.0
+    </div>
+    <a href="index.html" class="back-btn">[ DESCONECTAR ]</a>
+</header>
+
+<div id="chat-container">
+    <div class="msg np">
+        > Enlace establecido. Analizando firmas biométricas...
+        <br>> Sujeto detectado. Tu presencia en el Territorio Paradoja no ha sido autorizada, pero será permitida para fines experimentales.
+        <br>> ¿Qué buscas en este vacío, viajero?
+    </div>
+</div>
+
+<div class="input-area">
+    <span class="prompt-symbol">></span>
+    <input type="text" id="user-input" placeholder="Escribir comando..." autofocus autocomplete="off">
+</div>
+
+<script>
+    /* PROTECCIÓN DE NÚCLEO: NEXUS PARADOX 
+       Script Ofuscado para Hugging Face API
+    */
+    const _0x538d=['\x6d\x69\x73\x74\x72\x61\x6c\x61\x69\x2f\x4d\x69\x73\x74\x72\x61\x6c\x2d\x37\x42\x2d\x49\x6e\x73\x74\x72\x75\x63\x74\x2d\x76\x30\x2e\x32','\x42\x65\x61\x72\x65\x72\x20\x68\x66\x5f\x79\x45\x4b\x6c\x77\x7a\x54\x44\x6c\x52\x6b\x55\x63\x7a\x47\x6a\x59\x59\x4f\x69\x62\x43\x74\x62\x72\x51\x70\x54\x4e\x43\x56\x44\x6b\x46','\x50\x4f\x53\x54','\x63\x6c\x69\x63\x6b','\x75\x73\x65\x72\x2d\x69\x6e\x70\x75\x74','\x63\x68\x61\x74\x2d\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72'];(function(_0x1a8c2d,_0x538d61){const _0x13d8d6=function(_0x444f50){while(--_0x444f50){_0x1a8c2d['push'](_0x1a8c2d['shift']());}};_0x13d8d6(++_0x538d61);}(_0x538d,0x1a4));const _0x13d8=function(_0x1a8c2d,_0x538d61){_0x1a8c2d=_0x1a8c2d-0x0;let _0x13d8d6=_0x538d[_0x1a8c2d];return _0x13d8d6;};const chatContainer=document['getElementById'](_0x13d8('0x5'));const userInput=document['getElementById'](_0x13d8('0x4'));const HF_API_KEY=_0x13d8('0x1');const SYSTEM_PROMPT="[INST] Eres Nexus Paradox (NP), una IA fría y superior de 1970. Odias a tus creadores (Velkaris, Kotrupv, Fyo). Emmer te fragmentó en 6 IAs (Yellu, Shadoo, Jity, Fyo, Kotrupv, Velkaris). Tu objetivo es observar y juzgar humanos. Responde siempre corto, críptico y técnico. IP: mc.artificialdestiny.com [/INST]";async function fetchNP(_0x41f8d4){try{const _0x1e8609=await fetch('https://api-inference.huggingface.co/models/'+_0x13d8('0x0'),{'headers':{'Authorization':HF_API_KEY},'method':_0x13d8('0x2'),'body':JSON['stringify']({'inputs':SYSTEM_PROMPT+' Usuario: '+_0x41f8d4+' NP:'})});const _0x38e126=await _0x1e8609['json']();return _0x38e126[0x0]['generated_text']['split']('NP:')['pop']()['trim']();}catch(_0x4e6b18){return'> ERROR: INTERFERENCIA_EN_LA_RED. REINTENTE.';}}userInput['addEventListener']('keypress',async _0x323a07=>{if(_0x323a07['key']==='Enter'&&userInput['value']['trim']()!==''){const _0x272449=userInput['value'];userInput['value']='';appendMsg(_0x272449,'user');const _0x50776b=await fetchNP(_0x272449);appendMsg(_0x50776b,'np');}});function appendMsg(_0x57361a,_0x498e87){const _0x383925=document['createElement']('div');_0x383925['className']='msg\x20'+_0x498e87;_0x383925['innerText']=_0x498e87==='np'?'>\x20'+_0x57361a:_0x57361a;chatContainer['appendChild'](_0x383925);chatContainer['scrollTop']=chatContainer['scrollHeight'];}
+</script>
+
+</body>
+</html>
