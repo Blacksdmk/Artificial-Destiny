@@ -164,15 +164,16 @@ ESTILO VISUAL DE TEXTO:
 - Usa ocasionalmente mayúsculas para enfatizar tu superioridad.
 - Si el usuario insiste en "salir", búrlate de su limitación física.
 [/INST]`;
-    async function fetchNP(text) {
+async function fetchNP(text) {
         try {
             statusText.innerText = "PROCESANDO...";
             statusText.style.color = "yellow";
 
+            // Eliminamos cabeceras innecesarias que causan errores de CORS
             const response = await fetch(`https://api-inference.huggingface.co/models/${MODEL_ID}`, {
                 headers: { 
-                    "Authorization": `Bearer ${HF_TOKEN}`,
-                    "Content-Type": "application/json"
+                    "Authorization": `Bearer ${HF_TOKEN}`
+                    // Nota: Quitamos Content-Type para evitar el preflight de CORS
                 },
                 method: "POST",
                 body: JSON.stringify({ 
@@ -184,6 +185,13 @@ ESTILO VISUAL DE TEXTO:
                     }
                 }),
             });
+
+            // Si el error persiste, intentamos manejar la respuesta
+            if (!response.ok) {
+                const errorLog = await response.json();
+                console.error("Detalle técnico:", errorLog);
+                return "> ERROR: ACCESO_DENEGADO_POR_NÚCLEO.";
+            }
 
             const result = await response.json();
 
@@ -198,9 +206,10 @@ ESTILO VISUAL DE TEXTO:
             return result[0].generated_text.trim();
 
         } catch (e) {
-            statusText.innerText = "ERROR_RED";
+            console.error("Error crítico:", e);
+            statusText.innerText = "ERROR_CORS";
             statusText.style.color = "red";
-            return "> ERROR: CONEXIÓN INTERRUMPIDA.";
+            return "> ERROR: BLOQUEO DE PROTOCOLO EXTERNO (CORS).";
         }
     }
 
