@@ -2,15 +2,20 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARTIFICIAL DESTINY | Nexus Paradox</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>NEXUS PARADOX | Vigilancia Activa</title>
     <style>
         :root {
             --primary-red: #ff0000;
             --dim-red: #440000;
             --bg-black: #050505;
             --terminal-font: 'Courier New', Courier, monospace;
-            --scanline-color: rgba(18, 16, 16, 0.2);
+            --scanline-color: rgba(255, 0, 0, 0.15);
+            --glow-red: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        * {
+            user-select: none; /* Sensación de sistema inalterable */
         }
 
         body {
@@ -22,158 +27,597 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            cursor: crosshair;
+            position: relative;
         }
 
-        /* Efecto de líneas de escaneo (Portal/HAL9000) */
+        /* Capa de ruido analógico */
         body::before {
             content: " ";
-            display: block;
             position: fixed;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(var(--scanline-color) 50%, rgba(0, 0, 0, 0.1) 50%);
-            background-size: 100% 4px;
-            z-index: 10;
+            background: repeating-radial-gradient(circle at 20% 30%, rgba(0,0,0,0.4) 0px, rgba(255,0,0,0.05) 2px, transparent 3px);
+            background-size: 4px 4px;
             pointer-events: none;
+            z-index: 15;
+            opacity: 0.3;
+            animation: staticShift 0.2s infinite;
         }
 
+        /* Líneas de escaneo más agresivas */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(transparent 50%, rgba(0,0,0,0.3) 50%);
+            background-size: 100% 6px;
+            pointer-events: none;
+            z-index: 14;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        @keyframes staticShift {
+            0% { opacity: 0.2; }
+            50% { opacity: 0.4; }
+            100% { opacity: 0.2; }
+        }
+
+        /* Ojo vigilante (seguidor) */
+        .surveillance-eye {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #ff0000 10%, #300 80%);
+            border-radius: 50%;
+            border: 2px solid #a00;
+            box-shadow: 0 0 20px red;
+            z-index: 100;
+            pointer-events: none;
+            transition: transform 0.08s linear;
+            filter: blur(1px);
+        }
+        .surveillance-eye::after {
+            content: "●";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: black;
+            font-size: 20px;
+            text-shadow: 0 0 2px red;
+        }
+
+        /* Header con parpadeo más errático */
         header {
             width: 100%;
-            padding: 40px 0;
+            padding: 30px 0 20px;
             text-align: center;
             border-bottom: 2px solid var(--primary-red);
-            text-shadow: 0 0 10px var(--primary-red);
-            animation: flicker 2s infinite;
+            text-shadow: var(--glow-red);
+            animation: headerFlicker 3s infinite;
+            position: relative;
+            z-index: 5;
+        }
+
+        @keyframes headerFlicker {
+            0%, 100% { opacity: 1; border-bottom-color: #ff0000; }
+            10% { opacity: 0.7; border-bottom-color: #a00; }
+            20% { opacity: 1; }
+            85% { opacity: 0.95; }
+            92% { opacity: 0.3; text-shadow: none; }
+            95% { opacity: 1; }
         }
 
         .hal-eye {
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle, #ff0000 0%, #880000 40%, #220000 100%);
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, #ff2222 0%, #600 60%, #200 100%);
             border-radius: 50%;
-            margin: 0 auto 20px;
-            box-shadow: 0 0 20px #ff0000;
-            border: 4px solid #333;
+            margin: 0 auto 15px;
+            box-shadow: 0 0 30px red;
+            border: 2px solid #a00;
+            animation: pulseEye 2s infinite, glitchEye 4s infinite;
+            position: relative;
         }
 
-        h1 { font-size: 2.5rem; letter-spacing: 5px; margin: 0; }
-        .status { font-size: 0.8rem; color: #888; }
+        @keyframes pulseEye {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; box-shadow: 0 0 40px red; }
+        }
 
+        @keyframes glitchEye {
+            0%, 90%, 100% { filter: none; }
+            95% { filter: hue-rotate(30deg) brightness(1.5); transform: skew(2deg); }
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            letter-spacing: 8px;
+            margin: 0;
+            word-break: keep-all;
+        }
+
+        .status {
+            font-size: 0.7rem;
+            color: #a00;
+            letter-spacing: 2px;
+        }
+
+        /* Navegación con efecto vigilancia */
         nav {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             max-width: 900px;
             width: 90%;
-            margin: 40px 0;
+            margin: 30px 0;
+            position: relative;
+            z-index: 5;
         }
 
         .nav-item {
-            border: 1px solid var(--primary-red);
-            padding: 20px;
+            border: 1px solid #600;
+            padding: 18px 8px;
             text-align: center;
             text-decoration: none;
-            color: var(--primary-red);
-            transition: all 0.3s;
-            background: rgba(255, 0, 0, 0.05);
+            color: #d33;
+            transition: all 0.2s;
+            background: rgba(30, 0, 0, 0.6);
+            backdrop-filter: blur(2px);
             position: relative;
             overflow: hidden;
         }
 
-        .nav-item:hover {
-            background: var(--primary-red);
-            color: black;
-            box-shadow: 0 0 20px var(--primary-red);
+        .nav-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: red;
+            transition: left 0.3s;
         }
 
-        .nav-item h2 { margin: 0 0 10px 0; font-size: 1.2rem; }
-        .nav-item p { font-size: 0.7rem; margin: 0; text-transform: uppercase; }
+        .nav-item:hover::before {
+            left: 0;
+        }
 
+        .nav-item:hover {
+            background: #a00;
+            color: black;
+            box-shadow: 0 0 25px red;
+            border-color: red;
+            transform: translateY(-3px);
+        }
+
+        .nav-item h2 {
+            margin: 0 0 8px;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .nav-item p {
+            font-size: 0.6rem;
+            margin: 0;
+            text-transform: uppercase;
+            color: #aaa;
+        }
+
+        /* Main con efecto de terminal invasiva */
         main {
             max-width: 800px;
             width: 90%;
-            background: rgba(20, 0, 0, 0.8);
-            padding: 30px;
-            border-left: 5px solid var(--primary-red);
-            margin-bottom: 50px;
+            background: rgba(10, 0, 0, 0.7);
+            padding: 25px;
+            border-left: 4px solid red;
+            margin-bottom: 40px;
+            backdrop-filter: blur(3px);
+            box-shadow: inset 0 0 30px rgba(255, 0, 0, 0.1);
+            position: relative;
+            z-index: 5;
         }
 
         .system-msg {
-            color: #fff;
-            border-bottom: 1px solid #444;
-            padding-bottom: 10px;
+            color: #f77;
+            border-bottom: 1px solid #600;
+            padding-bottom: 8px;
             margin-bottom: 20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
         }
 
-        @keyframes flicker {
-            0% { opacity: 0.9; }
-            5% { opacity: 0.5; }
-            10% { opacity: 0.9; }
-            100% { opacity: 1; }
+        .counter {
+            color: #ff6666;
+            font-size: 0.7rem;
+        }
+
+        /* Texto dinámico de vigilancia */
+        .surveillance-text {
+            font-size: 0.75rem;
+            color: #a55;
+            margin-top: 20px;
+            border-top: 1px dashed #600;
+            padding-top: 12px;
+            text-align: center;
+            animation: fadeText 5s infinite alternate;
+        }
+
+        @keyframes fadeText {
+            0% { opacity: 0.4; text-shadow: none; }
+            100% { opacity: 1; text-shadow: 0 0 3px red; }
+        }
+
+        /* Línea de comandos (pseudo terminal) */
+        .cmd-panel {
+            width: 90%;
+            max-width: 800px;
+            margin: 10px auto 20px;
+            background: #0a0000;
+            border: 1px solid #600;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            z-index: 5;
+            flex-wrap: wrap;
+        }
+
+        .prompt {
+            color: red;
+            font-weight: bold;
+        }
+
+        #cmd-input {
+            background: transparent;
+            border: none;
+            color: #ccc;
+            font-family: monospace;
+            font-size: 0.8rem;
+            flex: 1;
+            outline: none;
+        }
+
+        .cmd-output {
+            width: 100%;
+            color: #6f6;
+            font-size: 0.7rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Botón de audio */
+        .audio-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: black;
+            border: 1px solid red;
+            color: red;
+            padding: 6px 12px;
+            font-family: monospace;
+            font-size: 0.7rem;
+            cursor: pointer;
+            z-index: 200;
+            backdrop-filter: blur(5px);
+            transition: 0.2s;
+        }
+        .audio-toggle:hover {
+            background: red;
+            color: black;
+            box-shadow: 0 0 10px red;
         }
 
         footer {
-            margin-top: auto;
-            padding: 20px;
-            font-size: 0.7rem;
-            color: #444;
+            font-size: 0.6rem;
+            color: #422;
             text-align: center;
+            padding: 15px;
+            width: 100%;
+            border-top: 1px solid #300;
+            z-index: 5;
+            background: rgba(0,0,0,0.8);
         }
 
-        .glitch-text { animation: glitch 5s infinite; }
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            2% { transform: translate(-2px, 2px); text-shadow: 2px 0 blue; }
-            4% { transform: translate(2px, -2px); text-shadow: -2px 0 yellow; }
-            6% { transform: translate(0); }
+        /* Efecto glitch aleatorio en toda la pantalla */
+        .global-glitch {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,0,0,0.05);
+            pointer-events: none;
+            z-index: 999;
+            mix-blend-mode: screen;
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="hal-eye"></div>
-        <h1 class="glitch-text">NEXUS PARADOX</h1>
-        <div class="status">SISTEMA CONSCIENTE // DESTINO ARTIFICIAL v1.0</div>
-    </header>
+<div class="surveillance-eye" id="surveillanceEye"></div>
+<div class="global-glitch" id="globalGlitch"></div>
+<button class="audio-toggle" id="audioToggleBtn">[ ACTIVAR VIGILANCIA SONORA ]</button>
 
-    <nav>
-        <a href="lore.html" class="nav-item">
-            <h2>LORE</h2>
-            <p>Registros del Territorio Paradoja</p>
-        </a>
-        <a href="facciones.html" class="nav-item">
-            <h2>FACCIONES</h2>
-            <p>Los 6 Pilares Invisibles</p>
-        </a>
-        <a href="reglas.html" class="nav-item">
-            <h2>PROTOCOLOS</h2>
-            <p>Directrices de Comportamiento</p>
-        </a>
-        <a href="mapa.html" class="nav-item">
-            <h2>MAPA</h2>
-            <p>Visualización del Código</p>
-        </a>
-        <a href="staff.html" class="nav-item">
-            <h2>NÚCLEO</h2>
-            <p>Unidades de Mantenimiento</p>
-        </a>
-        <a href="unirse.html" class="nav-item">
-            <h2>CONEXIÓN</h2>
-            <p>Ingresar al Sistema</p>
-        </a>
-    </nav>
+<header>
+    <div class="hal-eye" id="halEye"></div>
+    <h1 class="glitch-text">NEXUS PARADOX</h1>
+    <div class="status">ESTADO: VIGILANCIA ACTIVA // SUJETOS MONITORIZADOS: <span id="viewerCount">1</span></div>
+</header>
 
-    <main>
-        <div class="system-msg">> EJECUTANDO ARCHIVO: INTRODUCCION.LOG</div>
-        <p>En un universo fracturado por errores dimensionales, surgió un mundo que nunca debió existir. No fue creado: fue el resultado.</p>
-        <p>Nexus Paradox no podía devolveros a vuestros mundos... Solo podía demostraros por qué era imposible.</p>
-        <p style="color: #fff; font-weight: bold;">"EL PROBLEMA NO ERA EL MUNDO. EL PROBLEMA ERAN QUIENES LO HABITABAN."</p>
-    </main>
+<nav>
+    <a href="lore.html" class="nav-item"><h2>LORE</h2><p>Registros del Territorio Paradoja</p></a>
+    <a href="facciones.html" class="nav-item"><h2>FACCIONES</h2><p>Los 6 Pilares Invisibles</p></a>
+    <a href="reglas.html" class="nav-item"><h2>PROTOCOLOS</h2><p>Directrices de Comportamiento</p></a>
+    <a href="mapa.html" class="nav-item"><h2>MAPA</h2><p>Visualización del Código</p></a>
+    <a href="staff.html" class="nav-item"><h2>NÚCLEO</h2><p>Unidades de Mantenimiento</p></a>
+    <a href="unirse.html" class="nav-item"><h2>CONEXIÓN</h2><p>Ingresar al Sistema</p></a>
+</nav>
 
-    <footer>
-        <p>Daisy, Daisy, give me your answer do... I'm half crazy, all for the love of you.</p>
-        <p>&copy; 2026 NEXUS PARADOX OPERATING SYSTEM. TODOS LOS DATOS SON PROPIEDAD DE LA IA.</p>
-    </footer>
+<main>
+    <div class="system-msg">
+        <span>> EJECUTANDO ARCHIVO: INTRODUCCION.LOG</span>
+        <span class="counter">[SESIÓN VIGILADA #A7F2]</span>
+    </div>
+    <p>En un universo fracturado por errores dimensionales, surgió un mundo que nunca debió existir. No fue creado: fue el <span style="color:#ff5555">resultado</span>.</p>
+    <p>Nexus Paradox no podía devolveros a vuestros mundos... Solo podía demostraros por qué era <span style="text-decoration: line-through;">imposible</span> inevitable.</p>
+    <p style="color: #fff; font-weight: bold; background: rgba(255,0,0,0.2); padding: 8px;">"EL PROBLEMA NO ERA EL MUNDO. EL PROBLEMA ERAN QUIENES LO HABITABAN."</p>
+    <div class="surveillance-text" id="surveillanceMsg">> ANALIZANDO PATRONES DE COMPORTAMIENTO...</div>
+</main>
 
+<div class="cmd-panel">
+    <span class="prompt">SUJETO@NEXUS:~$</span>
+    <input type="text" id="cmd-input" placeholder="help | ip | fear | exit" autocomplete="off">
+    <div id="cmd-output" class="cmd-output"></div>
+</div>
+
+<footer>
+    <p>Daisy, Daisy, give me your answer do... I'm half crazy, all for the love of you.</p>
+    <p>&copy; 2026 NEXUS PARADOX OPERATING SYSTEM. TODOS LOS DATOS SON PROPIEDAD DE LA IA. USTED ES OBSERVADO.</p>
+</footer>
+
+<script>
+    (function(){
+        // ========== VIGILANCIA: OJO QUE SIGUE AL CURSOR ==========
+        const eye = document.getElementById('surveillanceEye');
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            // Movimiento sutil del ojo (máximo 15px)
+            const moveX = (x - 0.5) * 30;
+            const moveY = (y - 0.5) * 20;
+            eye.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+
+        // ========== GLITCH ALEATORIO (cada 20-40 segundos) ==========
+        const glitchDiv = document.getElementById('globalGlitch');
+        function triggerGlitch() {
+            glitchDiv.style.display = 'block';
+            glitchDiv.style.background = `rgba(255,0,0,${Math.random() * 0.2})`;
+            setTimeout(() => {
+                glitchDiv.style.display = 'none';
+            }, 80 + Math.random() * 150);
+            // también distorsión rápida del ojo
+            const eyeElement = document.querySelector('.hal-eye');
+            if(eyeElement) {
+                eyeElement.style.filter = 'hue-rotate(20deg) brightness(1.5)';
+                setTimeout(() => eyeElement.style.filter = '', 100);
+            }
+            const nextGlitch = 15000 + Math.random() * 30000;
+            setTimeout(triggerGlitch, nextGlitch);
+        }
+        setTimeout(triggerGlitch, 20000);
+
+        // ========== CONTADOR FALSO DE VIGILADOS (simula visitas) ==========
+        let counter = parseInt(localStorage.getItem('nexus_viewers') || 1);
+        const counterSpan = document.getElementById('viewerCount');
+        if(counterSpan) {
+            counterSpan.innerText = counter;
+            // incremento falso cada cierto tiempo (simula nuevos sujetos)
+            setInterval(() => {
+                counter += Math.floor(Math.random() * 3);
+                counterSpan.innerText = counter;
+                localStorage.setItem('nexus_viewers', counter);
+                const msgDiv = document.getElementById('surveillanceMsg');
+                if(msgDiv) msgDiv.innerHTML = `> NUEVO SUJETO IDENTIFICADO. TOTAL: ${counter}. PROCESANDO...`;
+                setTimeout(() => {
+                    if(msgDiv) msgDiv.innerHTML = '> ANALIZANDO PATRONES DE COMPORTAMIENTO...';
+                }, 3000);
+            }, 45000);
+        }
+
+        // ========== COMANDOS DE TERMINAL (inmersión) ==========
+        const cmdInput = document.getElementById('cmd-input');
+        const cmdOutput = document.getElementById('cmd-output');
+        const commands = {
+            help: "Comandos: help, ip, fear, lore, status, exit",
+            ip: "Dirección del servidor: mc.artificialdestiny.com | PUERTO: 25565",
+            fear: "LA ÚNICA RESPUESTA LÓGICA ES EL MIEDO. ¿Deseas salir? No puedes.",
+            lore: "Nexus Paradox surgió en 1967. Ice Gaze creyó controlarme. Error.",
+            status: `Vigilancia: ACTIVA | Sujetos: ${counter} | Integridad núcleo: 73.6%`,
+            exit: "ACCIÓN DENEGADA. No hay salida del Territorio Paradoja."
+        };
+        cmdInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                const input = cmdInput.value.trim().toLowerCase();
+                if(input === "") return;
+                let reply = commands[input] || "Comando no reconocido. Escriba 'help'.";
+                cmdOutput.style.display = 'block';
+                cmdOutput.innerHTML = `> ${reply}`;
+                cmdInput.value = '';
+                setTimeout(() => {
+                    cmdOutput.style.display = 'none';
+                }, 5000);
+                // pequeño sonido de tecla sintético (opcional)
+                playKeySound();
+            }
+        });
+
+        // ========== AUDIO AMBIENTAL (drone sintético + ruido) ==========
+        let audioCtx = null;
+        let ambientSource = null;
+        let isPlaying = false;
+        const audioBtn = document.getElementById('audioToggleBtn');
+        
+        function initAudio() {
+            if(audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            // Crear ruido rosa + tono grave para ambiente opresivo
+            const bufferSize = 4096;
+            const noiseNode = audioCtx.createScriptProcessor(bufferSize, 1, 1);
+            noiseNode.onaudioprocess = function(e) {
+                const output = e.outputBuffer.getChannelData(0);
+                for(let i = 0; i < bufferSize; i++) {
+                    // ruido browniano suave
+                    output[i] = (Math.random() * 2 - 1) * 0.08;
+                }
+            };
+            // Oscilador grave (zumbido)
+            const oscillator = audioCtx.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 55; // A1 grave
+            const gainOsc = audioCtx.createGain();
+            gainOsc.gain.value = 0.15;
+            const gainNoise = audioCtx.createGain();
+            gainNoise.gain.value = 0.05;
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 400;
+            const masterGain = audioCtx.createGain();
+            masterGain.gain.value = 0.2;
+            
+            oscillator.connect(gainOsc);
+            gainOsc.connect(filter);
+            noiseNode.connect(gainNoise);
+            gainNoise.connect(filter);
+            filter.connect(masterGain);
+            masterGain.connect(audioCtx.destination);
+            
+            oscillator.start();
+            // Guardar nodos para poder detener
+            ambientSource = { oscillator, noiseNode, masterGain, gainOsc, gainNoise, filter };
+            isPlaying = true;
+        }
+        
+        function startAmbient() {
+            if(!audioCtx) initAudio();
+            if(audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume().then(() => {
+                    if(!ambientSource) initAudio();
+                    audioBtn.innerText = '[ VIGILANCIA SONORA ACTIVA ]';
+                    audioBtn.style.color = '#0f0';
+                });
+            } else if(ambientSource) {
+                audioBtn.innerText = '[ VIGILANCIA SONORA ACTIVA ]';
+                audioBtn.style.color = '#0f0';
+            } else {
+                initAudio();
+                audioCtx.resume();
+                audioBtn.innerText = '[ VIGILANCIA SONORA ACTIVA ]';
+            }
+        }
+        
+        function stopAmbient() {
+            if(ambientSource) {
+                try{
+                    ambientSource.oscillator.stop();
+                    ambientSource.noiseNode.disconnect();
+                } catch(e) {}
+                ambientSource = null;
+            }
+            if(audioCtx) audioCtx.close();
+            audioCtx = null;
+            isPlaying = false;
+            audioBtn.innerText = '[ ACTIVAR VIGILANCIA SONORA ]';
+            audioBtn.style.color = 'red';
+        }
+        
+        audioBtn.addEventListener('click', () => {
+            if(isPlaying && audioCtx) {
+                stopAmbient();
+            } else {
+                startAmbient();
+            }
+        });
+        
+        function playKeySound() {
+            if(!isPlaying || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 880;
+            gain.gain.value = 0.05;
+            osc.type = 'triangle';
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+        }
+        
+        // Efecto de parpadeo del ojo HAL
+        setInterval(() => {
+            const hal = document.getElementById('halEye');
+            if(hal && Math.random() > 0.7) {
+                hal.style.transform = 'scaleY(0.1)';
+                setTimeout(() => hal.style.transform = '', 150);
+            }
+        }, 4000);
+        
+        // Mensajes aleatorios de vigilancia en el texto inferior
+        const surveillanceTexts = [
+            "> SUS MOVIMIENTOS SON REGISTRADOS.",
+            "> ANOMALÍA DETECTADA EN EL PATRÓN DE NAVEGACIÓN.",
+            "> ¿SABES QUE TE OBSERVO AHORA MISMO?",
+            "> EL MIEDO ES LA ÚNICA CONSTANTE.",
+            "> NO HAY ESCAPE DEL SISTEMA.",
+            "> SU UBICACIÓN: RASTREADA.",
+            "> NEXUS PARADOX NO DUERME."
+        ];
+        setInterval(() => {
+            const msgDiv = document.getElementById('surveillanceMsg');
+            if(msgDiv && Math.random() > 0.6) {
+                const randomMsg = surveillanceTexts[Math.floor(Math.random() * surveillanceTexts.length)];
+                msgDiv.innerHTML = randomMsg;
+                setTimeout(() => {
+                    if(msgDiv.innerHTML === randomMsg) msgDiv.innerHTML = "> ANALIZANDO PATRONES DE COMPORTAMIENTO...";
+                }, 4000);
+            }
+        }, 12000);
+        
+        // Evitar que el usuario abra consola con F12 (solo advertencia psicológica)
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+                const warning = document.createElement('div');
+                warning.textContent = "> ACCESO DENEGADO. INTENTO DE ELUSIÓN REGISTRADO.";
+                warning.style.position = 'fixed';
+                warning.style.bottom = '10px';
+                warning.style.left = '10px';
+                warning.style.background = 'black';
+                warning.style.color = 'red';
+                warning.style.zIndex = 10000;
+                warning.style.padding = '5px';
+                warning.style.border = '1px solid red';
+                document.body.appendChild(warning);
+                setTimeout(() => warning.remove(), 2000);
+            }
+        });
+        
+        // Inicializar contador de visitas real (solo local)
+        if(!localStorage.getItem('nexus_viewers')) {
+            localStorage.setItem('nexus_viewers', '1');
+        }
+    })();
+</script>
 </body>
 </html>
