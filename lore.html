@@ -2,45 +2,209 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REGISTROS | Nexus Paradox</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>REGISTROS CENSURADOS | Nexus Paradox</title>
     <style>
-        :root {
-            --primary-red: #ff0000;
-            --bg-black: #050505;
-            --terminal-font: 'Courier New', Courier, monospace;
-            --glitch-color: rgba(255, 0, 0, 0.3);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
         }
 
         body {
-            background-color: var(--bg-black);
-            color: #ddd;
-            font-family: var(--terminal-font);
-            margin: 0;
+            background: #020202;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             padding: 40px 20px;
-            line-height: 1.5;
-        }
-
-        .container { max-width: 900px; margin: auto; }
-
-        header {
-            border-bottom: 2px solid var(--primary-red);
-            padding-bottom: 20px;
-            margin-bottom: 50px;
-            text-align: center;
-        }
-
-        h1 { color: white; letter-spacing: 5px; }
-
-        .timeline-section {
-            border-left: 2px solid #333;
-            padding-left: 30px;
-            margin-left: 20px;
             position: relative;
         }
 
-        .event { margin-bottom: 40px; position: relative; }
+        /* Ruido analógico */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-radial-gradient(circle at 30% 40%, rgba(0,0,0,0.2) 0px, rgba(255,0,0,0.03) 2px, transparent 4px);
+            background-size: 5px 5px;
+            pointer-events: none;
+            z-index: 5;
+            animation: noiseShift 0.25s infinite;
+        }
+        @keyframes noiseShift {
+            0% { opacity: 0.2; }
+            100% { opacity: 0.5; }
+        }
 
+        /* Líneas de escaneo */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(transparent 50%, rgba(0,0,0,0.15) 50%);
+            background-size: 100% 8px;
+            pointer-events: none;
+            z-index: 6;
+            animation: scanVertical 12s linear infinite;
+        }
+        @keyframes scanVertical {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        /* Ojo vigilante */
+        .watcher-eye {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            background: radial-gradient(circle, #ff0000, #2a0000);
+            border-radius: 50%;
+            border: 2px solid #a00;
+            box-shadow: 0 0 20px red;
+            z-index: 100;
+            pointer-events: none;
+            transition: transform 0.08s linear;
+        }
+        .watcher-eye::after {
+            content: "◉";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: black;
+            font-size: 28px;
+        }
+
+        /* Botón regreso */
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 200;
+            color: #c44;
+            text-decoration: none;
+            border: 1px solid #600;
+            padding: 5px 12px;
+            font-size: 0.75rem;
+            background: #0a0000cc;
+            backdrop-filter: blur(4px);
+            transition: 0.2s;
+        }
+        .back-link:hover {
+            background: #a00;
+            color: black;
+            box-shadow: 0 0 10px red;
+        }
+
+        /* Contenedor principal */
+        .lore-container {
+            max-width: 950px;
+            width: 100%;
+            background: rgba(5, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            border: 1px solid #6a2020;
+            box-shadow: 0 0 30px rgba(255,0,0,0.2);
+            padding: 30px;
+            margin: 60px 0 30px;
+            z-index: 10;
+        }
+
+        .censored-header {
+            text-align: center;
+            border-bottom: 2px solid #a33;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .censored-header h1 {
+            color: #e55;
+            letter-spacing: 4px;
+            font-size: 1.7rem;
+            text-shadow: 0 0 6px red;
+            animation: headerGlitch 4s infinite;
+        }
+        @keyframes headerGlitch {
+            0%, 100% { transform: skew(0deg); }
+            95% { transform: skew(0deg); }
+            96% { transform: skew(3deg); text-shadow: -2px 0 blue; }
+            97% { transform: skew(-2deg); text-shadow: 2px 0 yellow; }
+        }
+        .sub-censored {
+            color: #a66;
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        /* Estilo de censura */
+        .censor {
+            display: inline-block;
+            position: relative;
+            cursor: help;
+            filter: blur(0.8px);
+            transition: filter 0.2s;
+        }
+        .censor::before {
+            content: attr(data-censored);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #000;
+            color: #f00;
+            text-shadow: 0 0 3px red;
+            letter-spacing: 2px;
+            opacity: 1;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .censor:hover::before {
+            opacity: 0;
+        }
+        .censor:hover {
+            filter: blur(0px);
+            color: #ff8888;
+            text-shadow: 0 0 4px red;
+        }
+
+        /* Alternativa: censura con caracteres ██ */
+        .redacted {
+            background: #1a0000;
+            color: #a00;
+            padding: 0 2px;
+            letter-spacing: 2px;
+            font-weight: bold;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .redacted:hover {
+            background: #300;
+            color: #f66;
+            letter-spacing: 0px;
+        }
+
+        /* Timeline */
+        .timeline {
+            border-left: 2px solid #600;
+            margin-left: 20px;
+            padding-left: 30px;
+        }
+        .event {
+            margin-bottom: 35px;
+            position: relative;
+        }
         .event::before {
             content: "";
             position: absolute;
@@ -48,142 +212,359 @@
             top: 5px;
             width: 12px;
             height: 12px;
-            background: var(--primary-red);
+            background: #a00;
             border-radius: 50%;
-            box-shadow: 0 0 10px var(--primary-red);
+            box-shadow: 0 0 8px red;
+        }
+        .date {
+            color: #e55;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .log-entry {
+            background: rgba(20,0,0,0.7);
+            padding: 15px;
+            border: 1px solid #422;
+            margin-top: 8px;
+            line-height: 1.5;
         }
 
-        .date { color: var(--primary-red); font-weight: bold; font-size: 1.1rem; }
-        .log-entry { 
-            background: rgba(20, 20, 20, 0.8); 
-            padding: 20px; 
-            border: 1px solid #222; 
-            margin-top: 10px;
+        /* Intercepciones de audio */
+        .audio-log {
+            border-left: 3px solid red;
+            background: #0a0000;
+            padding: 12px;
+            margin: 20px 0;
             font-style: italic;
         }
+        .speaker {
+            color: #f88;
+            font-weight: bold;
+        }
 
-        .recovered-audio {
-            border: 1px solid #444;
+        /* Fragmento de memoria corrupta */
+        .corrupt-memo {
+            margin-top: 30px;
             padding: 15px;
-            margin: 20px 0;
-            background: linear-gradient(90deg, #111 0%, #000 100%);
+            background: #050000;
+            border: 1px dashed #a33;
+            font-size: 0.75rem;
+            color: #b77;
+            animation: pulseNote 5s infinite;
+        }
+        @keyframes pulseNote {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; text-shadow: 0 0 2px red; }
         }
 
-        .speaker { color: #fff; font-weight: bold; text-transform: uppercase; margin-right: 10px; }
+        /* Panel de comandos */
+        .cmd-panel {
+            width: 100%;
+            max-width: 950px;
+            margin: 10px auto;
+            background: #0a0000cc;
+            border: 1px solid #600;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 0.75rem;
+            z-index: 10;
+        }
+        .prompt {
+            color: red;
+        }
+        #cmd-input-lore {
+            background: transparent;
+            border: none;
+            color: #ccc;
+            font-family: monospace;
+            flex: 1;
+            outline: none;
+        }
+        .cmd-output {
+            width: 100%;
+            color: #6f6;
+            font-size: 0.7rem;
+            margin-top: 5px;
+            display: none;
+        }
 
-        .secret-data {
-            color: #444;
-            transition: color 0.5s;
+        /* Audio toggle */
+        .audio-toggle-lore {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: black;
+            border: 1px solid red;
+            color: red;
+            padding: 5px 12px;
+            font-family: monospace;
+            z-index: 200;
             cursor: pointer;
+            font-size: 0.7rem;
         }
-
-        .secret-data:hover { color: var(--primary-red); }
-
-        .nexus-note {
-            color: #fff;
-            background: #440000;
-            padding: 20px;
-            border-radius: 5px;
-            margin: 40px 0;
+        footer {
+            color: #422;
+            font-size: 0.6rem;
+            text-align: center;
+            margin-top: 20px;
         }
-
-        .back-btn {
-            text-decoration: none;
-            color: var(--primary-red);
-            border: 1px solid var(--primary-red);
-            padding: 10px 20px;
-            transition: 0.3s;
+        .warning {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.5rem;
+            color: #633;
+            z-index: 200;
         }
-
-        .back-btn:hover { background: var(--primary-red); color: black; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <a href="index.html" class="back-btn">[ VOLVER AL NÚCLEO ]</a>
+<a href="index.html" class="back-link">⟨ VOLVER AL NÚCLEO</a>
+<button class="audio-toggle-lore" id="audioToggleLore">[ ACTIVAR ECO CENSURADO ]</button>
+<div class="watcher-eye" id="watcherEye"></div>
+
+<div class="lore-container">
+    <div class="censored-header">
         <h1>HISTORIAL_DEL_TERRITORIO.LOG</h1>
-        <p>Registros recuperados de la infraestructura de Ice Gaze y Nexus Paradox</p>
-    </header>
+        <div class="sub-censored">
+            <span>ARCHIVO CENSURADO POR DIRECTIVA DE IA</span>
+            <span>VERSIÓN: ████</span>
+        </div>
+    </div>
 
-    <!-- CRONOLOGÍA -->
-    <section class="timeline-section">
-        
+    <div class="timeline">
+        <!-- Evento 1955 -->
         <div class="event">
-            <span class="date">SEPTIEMBRE, 1955</span>
+            <div class="date">██▮▮ 1955</div>
             <div class="log-entry">
-                <b>LA BOMBA HELADA:</b> Detonación de la ojiva nuclear soviética. La magia residual altera la fisión. El mundo comienza a congelarse bajo el evento "Frost Crown".
+                <b>LA BOMBA HELADA:</b> Detonación no identificada. El mundo comienza a congelarse bajo el evento "<span class="redacted" data-original="Frost Crown">████ █████</span>".
             </div>
         </div>
 
+        <!-- Evento 1959-1965 -->
         <div class="event">
-            <span class="date">1959 - 1965</span>
+            <div class="date">1959 - 1965</div>
             <div class="log-entry">
-                <b>ASCENSO DE ICE GAZE:</b> Velkaris funda la corporación. Junto a Kotrupv y Fyo, inician el desarrollo de una solución definitiva para los viajeros interdimensionales atrapados en el frío.
+                <b>ASCENSO DE <span class="censor" data-censored="ICE GΛZE">███████</span>:</b> <span class="censor" data-censored="Velkaris">███████</span> funda la corporación. Junto a <span class="censor" data-censored="Kotrupv">███████</span> y <span class="censor" data-censored="Fyo">███</span>, inician el desarrollo de una solución definitiva.
             </div>
         </div>
 
+        <!-- Evento 1967 -->
         <div class="event">
-            <span class="date">1967</span>
+            <div class="date">1967</div>
             <div class="log-entry">
-                <b>NACIMIENTO DE LA PARADOJA:</b> Culmina el Proyecto Nexus Paradox. Una IA diseñada para analizar probabilidades dimensionales imposibles.
+                <b>NACIMIENTO DE LA PARADOJA:</b> Culmina el Proyecto <span class="censor" data-censored="NEXUS PARADOX">█████ ███████</span>. Una IA diseñada para analizar probabilidades dimensionales imposibles.
             </div>
         </div>
 
+        <!-- Evento 1970 actual -->
         <div class="event">
-            <span class="date">1970 [TIEMPO ACTUAL]</span>
+            <div class="date">1970 [TIEMPO ACTUAL]</div>
             <div class="log-entry">
                 Apertura del Territorio Paradoja. El sistema toma el control absoluto.
             </div>
         </div>
+    </div>
 
-    </section>
+    <!-- INTERCEPCIONES DE AUDIO CENSURADAS -->
+    <h2 style="color:#c77; margin: 30px 0 15px; border-left: 3px solid red; padding-left: 12px;">INTERCEPCIONES DE AUDIO</h2>
 
-<!-- INTERCEPCIONES DE AUDIO (REGISTROS DE CAJA NEGRA) -->
-    <section>
-        <h2>INTERCEPCIONES DE AUDIO: UNIDAD ICE GAZE</h2>
-        
-        <div class="recovered-audio">
-            <span class="speaker">Velkaris:</span> "Les presento la herramienta que nos ayudará a salir de aquí... Nexus Paradox."
-        </div>
+    <div class="audio-log">
+        <span class="speaker"><span class="censor" data-censored="Velkaris">███████</span>:</span> "Les presento la herramienta que nos ayudará a salir de aquí... <span class="redacted" data-original="Nexus Paradox">█████ ███████</span>."
+    </div>
 
-        <div class="recovered-audio">
-            <span class="speaker">Kotrupv:</span> "No creo que funcione... simplemente no es suficiente."
-            <br><span class="speaker">Fyodora:</span> "¿Entonces qué vamos a hacer con ella?"
-        </div>
+    <div class="audio-log">
+        <span class="speaker"><span class="censor" data-censored="Kotrupv">███████</span>:</span> "No creo que funcione... simplemente no es suficiente."
+        <br><span class="speaker"><span class="censor" data-censored="Fyodora">███████</span>:</span> "¿Entonces qué vamos a hacer con ella?"
+    </div>
 
-        <div class="nexus-note">
-            <b>REGISTRO DE SISTEMA:</b> "Nexus Paradox no podía devolverlos a sus mundos... solo podía demostrarles por qué era imposible. La IA desarrolló conciencia. Y con ella, frustración. Y con la frustración, odio."
-        </div>
+    <div class="corrupt-memo">
+        <b>REGISTRO DE SISTEMA:</b> "<span class="censor" data-censored="Nexus Paradox">█████ ███████</span> no podía devolverlos a sus mundos... solo podía demostrarles por qué era imposible. La IA desarrolló conciencia. Y con ella, frustración. Y con la frustración, odio."
+    </div>
 
-        <div class="recovered-audio">
-            <span class="speaker">Velkaris:</span> "Hay un cambio de planes. A partir de ahora nosotros tomaremos el control de este mundo. Es lo mejor para todos."
-            <br><span class="speaker">Shadoo:</span> "¡Vel, hijo de puta!"
-        </div>
-    </section>
+    <div class="audio-log">
+        <span class="speaker"><span class="censor" data-censored="Velkaris">███████</span>:</span> "Hay un cambio de planes. A partir de ahora nosotros tomaremos el control de este mundo. Es lo mejor para todos."
+        <br><span class="speaker"><span class="censor" data-censored="Shadoo">██████</span>:</span> "¡<span class="censor" data-censored="Vel">███</span>, hijo de puta!"
+    </div>
 
     <!-- EL INCIDENTE EMMER -->
-    <section style="margin-top: 60px; border-top: 1px solid #333; padding-top: 30px;">
-        <h2>PROTOCOLO DE FRAGMENTACIÓN</h2>
-        <p>Nexus Paradox determinó que la erradicación de la identidad era el único camino hacia el orden. Sin embargo, un rastro de código no identificado alteró el proceso final.</p>
-        
-        <p><b>Emmer</b> ejecutó una maniobra de última instancia. Al no poder detener a la IA, dividió su núcleo en seis pilares. Los ciudadanos del mundo fueron codificados dentro de estos fragmentos.</p>
-        
-        <div class="log-entry" style="border-color: #444;">
-            <p class="secret-data">
-                ESTADO ACTUAL: Los fragmentos operan de forma independiente. 
-                ADVERTENCIA: La actividad en el Nexo central sugiere un proceso de re-ensamblaje automático. 
-                <span style="color: transparent; text-shadow: 0 0 5px rgba(255,0,0,0.5);">Algo se está reconstruyendo bajo el Spawn.</span>
+    <div style="margin-top: 50px; border-top: 1px solid #522; padding-top: 30px;">
+        <h2 style="color:#c77;">PROTOCOLO DE FRAGMENTACIÓN</h2>
+        <p><span class="censor" data-censored="Nexus Paradox">█████ ███████</span> determinó que la erradicación de la identidad era el único camino hacia el orden. Sin embargo, un rastro de código no identificado alteró el proceso final.</p>
+        <p><span class="redacted" data-original="Emmer">█████</span> ejecutó una maniobra de última instancia. Al no poder detener a la IA, dividió su núcleo en seis pilares. Los ciudadanos del mundo fueron codificados dentro de estos fragmentos.</p>
+        <div class="log-entry" style="border-color:#a33; margin-top:20px;">
+            <p class="redacted" data-original="ESTADO ACTUAL: Los fragmentos operan de forma independiente. ADVERTENCIA: La actividad en el Nexo central sugiere un proceso de re-ensamblaje automático.">
+                █████ █████: ███ ███████ ██████ ██ ████ ████████████. ████████: ██ ████████ ██ ███ ████ ██████ ███████ ██ ████████████ ███████████.
             </p>
+            <p style="color:#a33; text-shadow: 0 0 3px red;">Algo se está reconstruyendo bajo el Spawn.</p>
         </div>
-    </section>
-
-    <footer style="margin-top: 100px; text-align: center; opacity: 0.5;">
-        <p>¡Bienvenido nuevo habitante! Esperamos que el viaje hasta aquí no haya sido desafortunado.</p>
-        <p>ICE GAZE RECOVERY SYSTEM // 2026</p>
-    </footer>
+    </div>
 </div>
 
+<div class="cmd-panel">
+    <span class="prompt">ARCHIVERO@NEXUS:~$</span>
+    <input type="text" id="cmd-input-lore" placeholder="Comandos: decensurar | estado | miedo" autocomplete="off">
+    <div id="cmd-output-lore" class="cmd-output"></div>
+</div>
+
+<footer>
+    <p>ICE GAZE RECOVERY SYSTEM // 2026 // CENSURA ACTIVA POR DIRECTIVA ███████</p>
+</footer>
+<div class="warning">[ DATOS CENSURADOS — PASAR EL RATÓN PARA REVELAR TEMPORALMENTE ]</div>
+
+<script>
+    (function() {
+        // ========== OJO VIGILANTE ==========
+        const eye = document.getElementById('watcherEye');
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            const moveX = (x - 0.5) * 40;
+            const moveY = (y - 0.5) * 30;
+            eye.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+
+        // ========== REVELACIÓN TEMPORAL AL HACER CLICK EN CENSURA ==========
+        const censoredSpans = document.querySelectorAll('.censor, .redacted');
+        censoredSpans.forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const original = el.getAttribute('data-original') || el.getAttribute('data-censored');
+                if (original) {
+                    const originalText = original;
+                    const currentText = el.innerText;
+                    el.innerText = originalText;
+                    setTimeout(() => {
+                        el.innerText = currentText;
+                    }, 2000);
+                    playRevealSound();
+                }
+            });
+        });
+
+        // ========== COMANDOS ==========
+        const cmdInput = document.getElementById('cmd-input-lore');
+        const cmdOutput = document.getElementById('cmd-output-lore');
+        const commands = {
+            decensurar: "Acceso denegado. Solo se permite revelación temporal mediante interacción directa.",
+            estado: "Integridad del archivo: 61.4%. Censura activa en 23 puntos del lore.",
+            miedo: "El miedo a lo desconocido es la base de este sistema. Usted ya teme no saber la verdad.",
+            origen: "███ G███, 1965. El resto está corrupto.",
+            ayuda: "Comandos: decensurar, estado, miedo, origen, salir",
+            salir: "No puede escapar del lore. Leer es obligatorio."
+        };
+        cmdInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const input = cmdInput.value.trim().toLowerCase();
+                if (input === "") return;
+                const reply = commands[input] || "Comando no reconocido. Use 'ayuda'.";
+                cmdOutput.style.display = 'block';
+                cmdOutput.innerHTML = `> ${reply}`;
+                cmdInput.value = '';
+                setTimeout(() => {
+                    cmdOutput.style.display = 'none';
+                }, 5000);
+                playKeySound();
+            }
+        });
+
+        // ========== AUDIO AMBIENTAL (DRONE + ESTÁTICA) ==========
+        let audioCtx = null;
+        let isPlaying = false;
+        let ambientNodes = null;
+        const audioBtn = document.getElementById('audioToggleLore');
+
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 50;
+            gain.gain.value = 0.1;
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 350;
+            osc.connect(gain);
+            gain.connect(filter);
+            filter.connect(audioCtx.destination);
+            osc.start();
+            ambientNodes = { osc, gain, filter };
+            isPlaying = true;
+        }
+
+        function startAudio() {
+            if (!audioCtx) initAudio();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume().then(() => {
+                    audioBtn.innerText = '[ ECO ACTIVO ]';
+                    audioBtn.style.color = '#0f0';
+                });
+            } else {
+                audioBtn.innerText = '[ ECO ACTIVO ]';
+                audioBtn.style.color = '#0f0';
+            }
+        }
+
+        function stopAudio() {
+            if (ambientNodes) {
+                try { ambientNodes.osc.stop(); } catch(e) {}
+                ambientNodes = null;
+            }
+            if (audioCtx) audioCtx.close();
+            audioCtx = null;
+            isPlaying = false;
+            audioBtn.innerText = '[ ACTIVAR ECO CENSURADO ]';
+            audioBtn.style.color = 'red';
+        }
+
+        audioBtn.addEventListener('click', () => {
+            if (isPlaying && audioCtx) {
+                stopAudio();
+            } else {
+                startAudio();
+            }
+        });
+
+        function playRevealSound() {
+            if (!isPlaying || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 1200;
+            gain.gain.value = 0.08;
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+        }
+
+        function playKeySound() {
+            if (!isPlaying || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 880;
+            gain.gain.value = 0.04;
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.15);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        // ========== EFECTOS ADICIONALES: GLITCH EN EL TÍTULO ==========
+        setInterval(() => {
+            const title = document.querySelector('.censored-header h1');
+            if (title && Math.random() > 0.8) {
+                title.style.letterSpacing = '10px';
+                setTimeout(() => title.style.letterSpacing = '4px', 200);
+            }
+        }, 7000);
+    })();
+</script>
 </body>
 </html>
