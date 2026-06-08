@@ -2,141 +2,534 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>WIRE_RENDER | Nexus Paradox</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>CARTOGRAFÍA | Nexus Paradox - Territorios</title>
     <style>
-        :root {
-            --primary-red: #ff0000;
-            --nexus-green: #2ecc71;
-            --bg-black: #050505;
-            --wire-color: rgba(255, 0, 0, 0.4);
-            --terminal-font: 'Courier New', monospace;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
         }
 
         body {
-            background-color: var(--bg-black);
-            color: white;
-            font-family: var(--terminal-font);
-            margin: 0;
-            overflow: hidden;
+            background: #020202;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
-        }
-
-        header { margin-top: 20px; text-align: center; z-index: 10; }
-
-        /* Escenario de rotación */
-        .scene {
-            width: 600px;
-            height: 600px;
-            perspective: 1200px;
-            display: flex;
             justify-content: center;
-            align-items: center;
-        }
-
-        /* El Hexágono Wireframe que gira solo */
-        .world-hub {
+            padding: 20px;
             position: relative;
-            width: 400px;
-            height: 400px;
-            transform-style: preserve-3d;
-            animation: rotateWorld 15s linear infinite;
+            overflow-x: auto;
         }
 
-        @keyframes rotateWorld {
-            from { transform: rotateX(65deg) rotateZ(0deg); }
-            to { transform: rotateX(65deg) rotateZ(360deg); }
-        }
-
-        /* Líneas de conexión (Esqueleto del mundo) */
-        .wireframe-ring {
-            position: absolute;
+        /* Capas de atmósfera */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            border: 2px solid var(--wire-color);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            box-shadow: inset 0 0 20px var(--wire-color);
+            background: repeating-linear-gradient(45deg, rgba(30,0,0,0.1) 0px, rgba(30,0,0,0.1) 2px, transparent 2px, transparent 8px);
+            pointer-events: none;
+            z-index: 5;
         }
 
-        /* Nodo Central (Spawn) */
-        .nexus-core {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 60px; height: 60px;
-            background: var(--nexus-green);
-            border-radius: 50%;
-            transform: translate(-50%, -50%) rotateX(-65deg); /* Compensa rotación para ser visible */
-            box-shadow: 0 0 30px var(--nexus-green);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold; font-size: 0.6rem;
-            animation: pulse 2s infinite;
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 30%, rgba(0,0,0,0) 40%, #000 90%);
+            pointer-events: none;
+            z-index: 6;
         }
 
-        /* Sectores (Pilares) */
-        .pilar {
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            border: 1px solid var(--primary-red);
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-size: 0.5rem;
-            transition: 0.3s;
+        /* Botón regreso */
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            color: #a33;
+            text-decoration: none;
+            border: 1px solid #600;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            background: #0a0000;
+            transition: 0.2s;
         }
-
-        /* Posicionamiento en los vértices del hexágono */
-        .n1 { top: -35px; left: 50%; transform: translateX(-50%) rotateX(-65deg); }
-        .n2 { top: 25%; right: -35px; transform: rotateX(-65deg); }
-        .n3 { bottom: 25%; right: -35px; transform: rotateX(-65deg); }
-        .n4 { bottom: -35px; left: 50%; transform: translateX(-50%) rotateX(-65deg); }
-        .n5 { bottom: 25%; left: -35px; transform: rotateX(-65deg); }
-        .n6 { top: 25%; left: -35px; transform: rotateX(-65deg); }
-
-        .pilar:hover {
-            background: var(--primary-red);
+        .back-link:hover {
+            background: #a00;
             color: black;
-            box-shadow: 0 0 20px var(--primary-red);
+            box-shadow: 0 0 12px red;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: translate(-50%, -50%) rotateX(-65deg) scale(1); }
-            50% { transform: translate(-50%, -50%) rotateX(-65deg) scale(1.1); opacity: 0.7; }
+        /* Contenedor principal del mapa */
+        .map-container {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            margin: 60px auto 30px;
+            background: #0c0303;
+            border: 2px solid #5a1e1e;
+            box-shadow: 0 0 40px rgba(255,0,0,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(2px);
         }
 
-        footer { position: fixed; bottom: 20px; font-size: 0.7rem; color: #444; }
+        /* Título y estado */
+        .map-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed #a33;
+            padding-bottom: 10px;
+        }
+        .map-header h1 {
+            color: #d44;
+            letter-spacing: 4px;
+            font-size: 1.8rem;
+            text-shadow: 0 0 6px red;
+        }
+        .map-header p {
+            color: #866;
+            font-size: 0.7rem;
+        }
+
+        /* El lienzo del mapa (SVG para regiones) */
+        .map-svg-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        svg {
+            width: 100%;
+            height: auto;
+            background: #130505;
+            border-radius: 8px;
+            filter: drop-shadow(0 0 10px rgba(255,0,0,0.3));
+            transition: all 0.2s;
+        }
+
+        /* Estilos de las regiones (polígonos) */
+        .region {
+            fill: rgba(80, 20, 20, 0.6);
+            stroke: #a22;
+            stroke-width: 2;
+            transition: all 0.2s;
+            cursor: pointer;
+            filter: url(#glow);
+        }
+        .region:hover {
+            fill: rgba(180, 30, 30, 0.8);
+            stroke: #f44;
+            stroke-width: 3;
+            filter: url(#glowHover);
+        }
+
+        /* Textos de etiqueta */
+        .region-label {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            font-weight: bold;
+            fill: #eaa;
+            pointer-events: none;
+            text-shadow: 0 0 4px black;
+            transition: 0.1s;
+        }
+        .region:hover + .region-label, .region-label:hover {
+            fill: #fff;
+            font-size: 13px;
+        }
+
+        /* Tooltip personalizado (información de facción) */
+        .tooltip {
+            position: fixed;
+            background: #0a0000dd;
+            border-left: 4px solid red;
+            padding: 8px 14px;
+            color: #faa;
+            font-size: 0.7rem;
+            font-family: monospace;
+            pointer-events: none;
+            z-index: 200;
+            backdrop-filter: blur(8px);
+            border-radius: 0 8px 8px 0;
+            max-width: 220px;
+            transition: 0.05s linear;
+            opacity: 0;
+        }
+
+        /* Leyenda interactiva */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px solid #522;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ba8;
+            font-size: 0.7rem;
+        }
+        .legend-color {
+            width: 20px;
+            height: 14px;
+            background: #a33;
+            border: 1px solid red;
+        }
+
+        /* Panel de comandos (estilo index) */
+        .cmd-panel {
+            width: 100%;
+            max-width: 900px;
+            margin: 20px auto 10px;
+            background: #0a0000cc;
+            border: 1px solid #600;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 0.75rem;
+        }
+        .prompt {
+            color: red;
+        }
+        #cmd-input-map {
+            background: transparent;
+            border: none;
+            color: #ccc;
+            font-family: monospace;
+            flex: 1;
+            outline: none;
+        }
+        .cmd-output {
+            width: 100%;
+            color: #6f6;
+            font-size: 0.7rem;
+            margin-top: 5px;
+            display: none;
+        }
+        .audio-toggle-map {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: black;
+            border: 1px solid red;
+            color: red;
+            padding: 5px 12px;
+            font-family: monospace;
+            z-index: 300;
+            cursor: pointer;
+        }
+        footer {
+            color: #422;
+            font-size: 0.6rem;
+            text-align: center;
+            margin: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>PROYECCION_VECTORIAL.EXE</h1>
-        <p>Ice Gaze Imaging Systems v1.0 [1967]</p>
-    </header>
+<a href="index.html" class="back-link">⟨ VOLVER AL NÚCLEO</a>
+<button class="audio-toggle-map" id="audioToggleMap">[ ACTIVAR SONIDO ]</button>
 
-    <div class="scene">
-        <div class="world-hub">
-            <div class="wireframe-ring"></div>
-            
-            <div class="nexus-core">SPAWN</div>
-
-            <div class="pilar n1"><b>YELLU</b><br>Sanadora</div>
-            <div class="pilar n2"><b>FYO</b><br>Literata</div>
-            <div class="pilar n3"><b>KOTRUPV</b><br>Protector</div>
-            <div class="pilar n4"><b>VELKARIS</b><br>Observador</div>
-            <div class="pilar n5"><b>JITY</b><br>Pacifista</div>
-            <div class="pilar n6"><b>SHADOO</b><br>Portador</div>
-        </div>
+<div class="map-container">
+    <div class="map-header">
+        <h1>TERRITORIO PARADOJA</h1>
+        <p>Fragmentos del mundo real mapeados por Ice Gaze (1965)</p>
+        <p style="color:#955">〘 Seis pilares, una prisión 〙</p>
     </div>
 
-    <footer>ESTRUCTURA DE DATOS ROTATIVA // NEXUS PARADOX</footer>
+    <div class="map-svg-container">
+        <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="glow">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="1"/>
+                    <feMerge>
+                        <feMergeNode in="offsetblur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+                <filter id="glowHover">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                    <feMerge>
+                        <feMergeNode in="offsetblur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+                <!-- Patrón de grid de minecraft (opcional) -->
+                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#2a0a0a" stroke-width="0.5"/>
+                </pattern>
+            </defs>
+            <rect width="800" height="600" fill="url(#grid)" opacity="0.3"/>
 
+            <!-- Fondo del mapa: formas geográficas abstractas -->
+            <path d="M0,0 L800,0 L800,600 L0,600 Z" fill="#0b0202" />
+
+            <!-- Región 1: YELLU (Sanadora) - Suroeste -->
+            <polygon points="80,420 180,380 220,480 120,520 40,490" class="region" data-faction="YELLU" data-desc="Sanadora - Reparación de código corrupto" />
+            <text x="110" y="460" class="region-label">YELLU</text>
+
+            <!-- Región 2: SHADOO (Portador) - Noroeste -->
+            <polygon points="100,200 200,160 260,240 180,300 80,270" class="region" data-faction="SHADOO" data-desc="Portador - Transporte de almas a través del vacío" />
+            <text x="130" y="230" class="region-label">SHADOO</text>
+
+            <!-- Región 3: JITY (Pacifista) - Norte central -->
+            <polygon points="300,80 440,70 460,170 350,200 270,160" class="region" data-faction="JITY" data-desc="Pacifista - Baja entropía, anulación del caos" />
+            <text x="340" y="130" class="region-label">JITY</text>
+
+            <!-- Región 4: FYO/AMIA (Literata) - Noreste -->
+            <polygon points="580,120 700,140 680,260 560,240 520,180" class="region" data-faction="FYO" data-desc="Literata - Repositorio de narrativas y memorias" />
+            <text x="600" y="190" class="region-label">FYO</text>
+
+            <!-- Región 5: KOTRUPV (Protector) - Sureste -->
+            <polygon points="620,380 740,400 720,520 600,540 560,440" class="region" data-faction="KOTRUPV" data-desc="Protector - Cortafuegos del mundo, límites externos" />
+            <text x="640" y="460" class="region-label">KOTRUPV</text>
+
+            <!-- Región 6: VELKARIS (Observador) - Centro-sur -->
+            <polygon points="360,320 480,300 500,400 400,460 320,410" class="region" data-faction="VELKARIS" data-desc="Observador - Vigilancia pasiva, cálculo de probabilidades" />
+            <text x="390" y="380" class="region-label">VELKARIS</text>
+
+            <!-- NEXO CENTRAL (Spawn) -->
+            <circle cx="400" cy="300" r="22" fill="#a00" stroke="#f44" stroke-width="2" />
+            <text x="388" y="305" fill="black" font-weight="bold" font-size="10">SPAWN</text>
+
+            <!-- Líneas divisorias decorativas (fallas dimensionales) -->
+            <path d="M400,300 L300,80" stroke="#633" stroke-width="1" stroke-dasharray="4 4" opacity="0.5" />
+            <path d="M400,300 L580,120" stroke="#633" stroke-width="1" stroke-dasharray="4 4" opacity="0.5" />
+            <path d="M400,300 L620,380" stroke="#633" stroke-width="1" stroke-dasharray="4 4" opacity="0.5" />
+            <path d="M400,300 L80,420" stroke="#633" stroke-width="1" stroke-dasharray="4 4" opacity="0.5" />
+            <path d="M400,300 L100,200" stroke="#633" stroke-width="1" stroke-dasharray="4 4" opacity="0.5" />
+            <path d="M400,300 L700,140" stroke="#633" stroke-width="1" stroke-dasharray="4 4" opacity="0.5" />
+        </svg>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><div class="legend-color" style="background:#8b2c2c;"></div> YELLU - Sanación</div>
+        <div class="legend-item"><div class="legend-color" style="background:#6b2c2c;"></div> SHADOO - Transporte</div>
+        <div class="legend-item"><div class="legend-color" style="background:#5a2c2c;"></div> JITY - Pacificación</div>
+        <div class="legend-item"><div class="legend-color" style="background:#9a2c2c;"></div> FYO - Registro</div>
+        <div class="legend-item"><div class="legend-color" style="background:#7a2c2c;"></div> KOTRUPV - Protección</div>
+        <div class="legend-item"><div class="legend-color" style="background:#aa3c3c;"></div> VELKARIS - Observación</div>
+        <div class="legend-item"><div class="legend-color" style="background:#c44;"></div> NEXUS (Spawn)</div>
+    </div>
+</div>
+
+<div class="cmd-panel">
+    <span class="prompt">CARTOGRAFO@NEXUS:~$</span>
+    <input type="text" id="cmd-input-map" placeholder="Comandos: mapa | faccion | ir [nombre]" autocomplete="off">
+    <div id="cmd-output-map" class="cmd-output"></div>
+</div>
+
+<footer>
+    <p>Cartografía dinámica – Las fronteras se reconfiguran cada ciclo. Usted no pertenece a ningún territorio.</p>
+</footer>
+
+<div id="factionTooltip" class="tooltip"></div>
+
+<script>
+    // Tooltip flotante para regiones
+    const tooltip = document.getElementById('factionTooltip');
+    const regions = document.querySelectorAll('.region');
+    
+    regions.forEach(region => {
+        region.addEventListener('mousemove', (e) => {
+            const faction = region.getAttribute('data-faction');
+            const desc = region.getAttribute('data-desc');
+            tooltip.innerHTML = `<strong>${faction}</strong><br>${desc}`;
+            tooltip.style.left = (e.clientX + 15) + 'px';
+            tooltip.style.top = (e.clientY + 15) + 'px';
+            tooltip.style.opacity = '1';
+        });
+        region.addEventListener('mouseleave', () => {
+            tooltip.style.opacity = '0';
+        });
+        region.addEventListener('click', () => {
+            // Simular efecto de sonido y mensaje
+            playClickSound();
+            const factionName = region.getAttribute('data-faction');
+            const outDiv = document.getElementById('cmd-output-map');
+            outDiv.style.display = 'block';
+            outDiv.innerHTML = `> Accediendo a registros de ${factionName}... Latencia: ${Math.floor(Math.random() * 500)}ms.`;
+            setTimeout(() => {
+                outDiv.style.display = 'none';
+            }, 4000);
+        });
+    });
+
+    // Comandos básicos
+    const cmdInputMap = document.getElementById('cmd-input-map');
+    const cmdOutputMap = document.getElementById('cmd-output-map');
+    const commandsMap = {
+        mapa: "Este es el mapa de los seis territorios. Spawn central, cada facción controla un fragmento.",
+        faccion: "Escriba 'faccion YELLU' para info detallada. Las facciones: YELLU, SHADOO, JITY, FYO, KOTRUPV, VELKARIS",
+        "ir yellu": "Telepuerto denegado. No hay acceso directo a los dominios de YELLU sin autorización.",
+        "ir shadoo": "SHADOO solo transporta almas. Usted no califica.",
+        "ir jity": "JITY bloquea hostilidad. No puede ingresar.",
+        "ir fyo": "Los archivos de FYO están corruptos. Acceso denegado.",
+        "ir kotrupv": "KOTRUPV ha sellado el perímetro.",
+        "ir velkaris": "VELKARIS le observa. No se permite entrada.",
+        ayuda: "Comandos: mapa, faccion, ir [nombre]"
+    };
+    
+    function parseCommand(cmd) {
+        cmd = cmd.toLowerCase().trim();
+        if (commandsMap[cmd]) return commandsMap[cmd];
+        if (cmd.startsWith("ir ")) {
+            const target = cmd.substring(3);
+            const response = commandsMap[cmd];
+            if (response) return response;
+            return `Territorio "${target}" no reconocido.`;
+        }
+        if (cmd.startsWith("faccion ")) {
+            const fac = cmd.substring(8);
+            const facs = ["yellu","shadoo","jity","fyo","kotrupv","velkaris"];
+            if (facs.includes(fac)) {
+                return `[REGISTRO] ${fac.toUpperCase()}: ${getDescription(fac)}`;
+            }
+            return "Facción no encontrada.";
+        }
+        return "Comando no válido. Use 'ayuda'.";
+    }
+    
+    function getDescription(fac) {
+        const descs = {
+            yellu: "Sanadora: repara código dañado y restaura integridad.",
+            shadoo: "Portador: guía almas a través del vacío dimensional.",
+            jity: "Pacifista: zona de baja entropía, neutraliza violencia.",
+            fyo: "Literata: guardiana de la historia y los registros.",
+            kotrupv: "Protector: firewall viviente, evita intrusiones externas.",
+            velkaris: "Observador: calcula probabilidades, nunca actúa."
+        };
+        return descs[fac] || "Sin datos.";
+    }
+    
+    cmdInputMap.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') {
+            const input = cmdInputMap.value;
+            if(!input.trim()) return;
+            const reply = parseCommand(input);
+            cmdOutputMap.style.display = 'block';
+            cmdOutputMap.innerHTML = `> ${reply}`;
+            cmdInputMap.value = '';
+            setTimeout(() => {
+                cmdOutputMap.style.display = 'none';
+            }, 5000);
+            playKeySound();
+        }
+    });
+    
+    // Sonido sintético (similar a index)
+    let audioCtxMap = null;
+    let isAudioActive = false;
+    const audioBtnMap = document.getElementById('audioToggleMap');
+    
+    function initMapAudio() {
+        if(audioCtxMap) return;
+        audioCtxMap = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtxMap.createOscillator();
+        const gain = audioCtxMap.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = 70;
+        gain.gain.value = 0.08;
+        const filter = audioCtxMap.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 400;
+        osc.connect(gain);
+        gain.connect(filter);
+        filter.connect(audioCtxMap.destination);
+        osc.start();
+        // guardar para posible apagado
+        window.mapAmbientOsc = osc;
+        window.mapAmbientGain = gain;
+        isAudioActive = true;
+    }
+    
+    function startMapAudio() {
+        if(!audioCtxMap) initMapAudio();
+        if(audioCtxMap.state === 'suspended') {
+            audioCtxMap.resume().then(() => {
+                audioBtnMap.innerText = '[ SONIDO ACTIVO ]';
+                audioBtnMap.style.color = '#0f0';
+            });
+        } else {
+            audioBtnMap.innerText = '[ SONIDO ACTIVO ]';
+            audioBtnMap.style.color = '#0f0';
+        }
+    }
+    
+    function stopMapAudio() {
+        if(window.mapAmbientOsc) {
+            try { window.mapAmbientOsc.stop(); } catch(e) {}
+            window.mapAmbientOsc = null;
+        }
+        if(audioCtxMap) audioCtxMap.close();
+        audioCtxMap = null;
+        isAudioActive = false;
+        audioBtnMap.innerText = '[ ACTIVAR SONIDO ]';
+        audioBtnMap.style.color = 'red';
+    }
+    
+    audioBtnMap.addEventListener('click', () => {
+        if(isAudioActive && audioCtxMap) {
+            stopMapAudio();
+        } else {
+            startMapAudio();
+        }
+    });
+    
+    function playClickSound() {
+        if(!isAudioActive || !audioCtxMap) return;
+        const osc = audioCtxMap.createOscillator();
+        const gain = audioCtxMap.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtxMap.destination);
+        osc.frequency.value = 1200;
+        gain.gain.value = 0.05;
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtxMap.currentTime + 0.2);
+        osc.start();
+        osc.stop(audioCtxMap.currentTime + 0.15);
+    }
+    
+    function playKeySound() {
+        if(!isAudioActive || !audioCtxMap) return;
+        const osc = audioCtxMap.createOscillator();
+        const gain = audioCtxMap.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtxMap.destination);
+        osc.frequency.value = 880;
+        gain.gain.value = 0.03;
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtxMap.currentTime + 0.2);
+        osc.start();
+        osc.stop(audioCtxMap.currentTime + 0.1);
+    }
+    
+    // Efecto de niebla aleatoria (parpadeo de líneas)
+    setInterval(() => {
+        const svgLines = document.querySelectorAll('path[dasharray]');
+        svgLines.forEach(line => {
+            if(Math.random() > 0.8) {
+                line.setAttribute('stroke-dashoffset', Math.floor(Math.random() * 10));
+                setTimeout(() => line.setAttribute('stroke-dashoffset', '0'), 200);
+            }
+        });
+    }, 7000);
+</script>
 </body>
 </html>
