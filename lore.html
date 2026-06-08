@@ -3,27 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>REGISTROS CENSURADOS | Nexus Paradox</title>
+    <title>HISTORIAL CENSURADO | Nexus Paradox</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
         }
 
         body {
-            background: #020202;
-            font-family: 'Courier New', monospace;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
+            background: #010101;
+            font-family: 'Courier New', 'Courier', monospace;
+            color: #cccccc;
+            line-height: 1.5;
+            padding: 2rem 1rem;
             position: relative;
+            min-height: 100vh;
         }
 
-        /* Ruido analógico */
+        /* Capas atmosféricas */
         body::before {
             content: "";
             position: fixed;
@@ -31,18 +29,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-radial-gradient(circle at 30% 40%, rgba(0,0,0,0.2) 0px, rgba(255,0,0,0.03) 2px, transparent 4px);
-            background-size: 5px 5px;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(255,0,0,0.02) 2px, transparent 4px);
             pointer-events: none;
             z-index: 5;
-            animation: noiseShift 0.25s infinite;
         }
-        @keyframes noiseShift {
-            0% { opacity: 0.2; }
-            100% { opacity: 0.5; }
-        }
-
-        /* Líneas de escaneo */
         body::after {
             content: "";
             position: fixed;
@@ -50,34 +40,28 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(transparent 50%, rgba(0,0,0,0.15) 50%);
-            background-size: 100% 8px;
+            background: radial-gradient(circle at 20% 40%, rgba(0,0,0,0.3) 0%, #000 90%);
             pointer-events: none;
             z-index: 6;
-            animation: scanVertical 12s linear infinite;
-        }
-        @keyframes scanVertical {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
         }
 
         /* Ojo vigilante */
-        .watcher-eye {
+        .watch-eye {
             position: fixed;
             bottom: 30px;
             right: 30px;
             width: 55px;
             height: 55px;
-            background: radial-gradient(circle, #ff0000, #2a0000);
+            background: radial-gradient(circle, #ff1111, #2a0000);
             border-radius: 50%;
-            border: 2px solid #a00;
+            border: 2px solid #a33;
             box-shadow: 0 0 20px red;
-            z-index: 100;
+            z-index: 200;
             pointer-events: none;
             transition: transform 0.08s linear;
         }
-        .watcher-eye::after {
-            content: "◉";
+        .watch-eye::after {
+            content: "⬤";
             position: absolute;
             top: 50%;
             left: 50%;
@@ -86,199 +70,184 @@
             font-size: 28px;
         }
 
-        /* Botón regreso */
-        .back-link {
+        /* Botones flotantes */
+        .back-link, .audio-toggle {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 200;
-            color: #c44;
-            text-decoration: none;
-            border: 1px solid #600;
-            padding: 5px 12px;
-            font-size: 0.75rem;
             background: #0a0000cc;
             backdrop-filter: blur(4px);
+            border: 1px solid #a22;
+            padding: 5px 12px;
+            font-size: 0.7rem;
+            font-family: monospace;
+            text-decoration: none;
+            color: #c44;
+            z-index: 200;
             transition: 0.2s;
+            cursor: pointer;
         }
-        .back-link:hover {
+        .back-link {
+            top: 20px;
+            left: 20px;
+        }
+        .audio-toggle {
+            bottom: 20px;
+            left: 20px;
+        }
+        .back-link:hover, .audio-toggle:hover {
             background: #a00;
             color: black;
             box-shadow: 0 0 10px red;
         }
 
         /* Contenedor principal */
-        .lore-container {
+        .lore-paper {
             max-width: 950px;
             width: 100%;
-            background: rgba(5, 0, 0, 0.75);
-            backdrop-filter: blur(4px);
+            margin: 60px auto 40px;
+            background: rgba(5, 0, 0, 0.65);
+            backdrop-filter: blur(5px);
             border: 1px solid #6a2020;
+            border-radius: 12px;
             box-shadow: 0 0 30px rgba(255,0,0,0.2);
-            padding: 30px;
-            margin: 60px 0 30px;
+            padding: 2rem;
+            position: relative;
             z-index: 10;
         }
 
-        .censored-header {
+        /* Encabezado censurado */
+        .lore-header {
             text-align: center;
             border-bottom: 2px solid #a33;
-            padding-bottom: 15px;
-            margin-bottom: 30px;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
         }
-        .censored-header h1 {
+        .lore-header h1 {
             color: #e55;
+            font-size: 1.8rem;
             letter-spacing: 4px;
-            font-size: 1.7rem;
-            text-shadow: 0 0 6px red;
-            animation: headerGlitch 4s infinite;
+            text-shadow: 0 0 5px red;
+            animation: glitchTitle 3s infinite;
         }
-        @keyframes headerGlitch {
+        @keyframes glitchTitle {
             0%, 100% { transform: skew(0deg); }
-            95% { transform: skew(0deg); }
-            96% { transform: skew(3deg); text-shadow: -2px 0 blue; }
-            97% { transform: skew(-2deg); text-shadow: 2px 0 yellow; }
+            96% { transform: skew(0deg); }
+            97% { transform: skew(3deg); text-shadow: -2px 0 blue; }
+            98% { transform: skew(-2deg); text-shadow: 2px 0 yellow; }
         }
-        .sub-censored {
-            color: #a66;
-            font-size: 0.7rem;
+        .sub {
             display: flex;
             justify-content: space-between;
+            font-size: 0.7rem;
+            color: #a77;
             margin-top: 8px;
         }
 
-        /* Estilo de censura */
-        .censor {
-            display: inline-block;
-            position: relative;
-            cursor: help;
-            filter: blur(0.8px);
-            transition: filter 0.2s;
-        }
-        .censor::before {
-            content: attr(data-censored);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: #000;
-            color: #f00;
-            text-shadow: 0 0 3px red;
-            letter-spacing: 2px;
-            opacity: 1;
-            transition: opacity 0.2s;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-        .censor:hover::before {
-            opacity: 0;
-        }
-        .censor:hover {
-            filter: blur(0px);
-            color: #ff8888;
-            text-shadow: 0 0 4px red;
-        }
-
-        /* Alternativa: censura con caracteres ██ */
-        .redacted {
-            background: #1a0000;
-            color: #a00;
-            padding: 0 2px;
-            letter-spacing: 2px;
-            font-weight: bold;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .redacted:hover {
-            background: #300;
-            color: #f66;
-            letter-spacing: 0px;
-        }
-
-        /* Timeline */
+        /* Cronología */
         .timeline {
-            border-left: 2px solid #600;
-            margin-left: 20px;
-            padding-left: 30px;
+            border-left: 2px solid #a33;
+            margin-left: 1rem;
+            padding-left: 2rem;
         }
         .event {
-            margin-bottom: 35px;
+            margin-bottom: 2rem;
             position: relative;
         }
         .event::before {
             content: "";
             position: absolute;
-            left: -37px;
-            top: 5px;
+            left: -2.4rem;
+            top: 0.3rem;
             width: 12px;
             height: 12px;
-            background: #a00;
+            background: #c44;
             border-radius: 50%;
-            box-shadow: 0 0 8px red;
+            box-shadow: 0 0 6px red;
         }
         .date {
-            color: #e55;
+            color: #f66;
             font-weight: bold;
             font-size: 1rem;
+            margin-bottom: 0.5rem;
         }
         .log-entry {
-            background: rgba(20,0,0,0.7);
-            padding: 15px;
-            border: 1px solid #422;
-            margin-top: 8px;
-            line-height: 1.5;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 1rem;
+            border: 1px solid #522;
+            border-radius: 6px;
         }
 
-        /* Intercepciones de audio */
-        .audio-log {
-            border-left: 3px solid red;
-            background: #0a0000;
-            padding: 12px;
-            margin: 20px 0;
+        /* Estilo para nombres censurados */
+        .censor {
+            display: inline-block;
+            background: #1a0000;
+            color: #b33;
+            padding: 0 4px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 3px;
+        }
+        .censor:hover {
+            background: #300;
+            color: #f88;
+            letter-spacing: 0;
+            filter: none;
+        }
+        /* Revelado al hacer click (temporal) */
+        .censor.revealed {
+            background: #2a0000;
+            color: #ff9999;
+            letter-spacing: normal;
+        }
+
+        /* Bloques de audio y fragmentos */
+        .audio-block {
+            border-left: 4px solid #c44;
+            background: #0a0000aa;
+            padding: 0.8rem;
+            margin: 1.5rem 0;
             font-style: italic;
         }
         .speaker {
-            color: #f88;
+            color: #faa;
             font-weight: bold;
         }
-
-        /* Fragmento de memoria corrupta */
-        .corrupt-memo {
-            margin-top: 30px;
-            padding: 15px;
-            background: #050000;
+        .corrupt-note {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #030000;
             border: 1px dashed #a33;
-            font-size: 0.75rem;
-            color: #b77;
-            animation: pulseNote 5s infinite;
+            font-size: 0.8rem;
+            color: #b88;
+            animation: pulse 6s infinite;
         }
-        @keyframes pulseNote {
-            0%, 100% { opacity: 0.6; }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
             50% { opacity: 1; text-shadow: 0 0 2px red; }
         }
 
-        /* Panel de comandos */
+        /* Comandos */
         .cmd-panel {
-            width: 100%;
             max-width: 950px;
-            margin: 10px auto;
+            margin: 1rem auto;
             background: #0a0000cc;
             border: 1px solid #600;
-            padding: 10px;
+            padding: 0.6rem 1rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
             font-size: 0.75rem;
+            border-radius: 8px;
             z-index: 10;
+            position: relative;
         }
-        .prompt {
-            color: red;
-        }
-        #cmd-input-lore {
+        .prompt { color: red; }
+        #cmd-input {
             background: transparent;
             border: none;
-            color: #ccc;
+            color: #ddd;
             font-family: monospace;
             flex: 1;
             outline: none;
@@ -291,32 +260,18 @@
             display: none;
         }
 
-        /* Audio toggle */
-        .audio-toggle-lore {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: black;
-            border: 1px solid red;
-            color: red;
-            padding: 5px 12px;
-            font-family: monospace;
-            z-index: 200;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
         footer {
-            color: #422;
-            font-size: 0.6rem;
             text-align: center;
-            margin-top: 20px;
+            font-size: 0.6rem;
+            color: #533;
+            margin-top: 2rem;
         }
         .warning {
             position: fixed;
             bottom: 10px;
             right: 10px;
             font-size: 0.5rem;
-            color: #633;
+            color: #644;
             z-index: 200;
         }
     </style>
@@ -324,44 +279,49 @@
 <body>
 
 <a href="index.html" class="back-link">⟨ VOLVER AL NÚCLEO</a>
-<button class="audio-toggle-lore" id="audioToggleLore">[ ACTIVAR ECO CENSURADO ]</button>
-<div class="watcher-eye" id="watcherEye"></div>
+<button class="audio-toggle" id="audioToggle">[ ACTIVAR RUIDO DE FONDO ]</button>
+<div class="watch-eye" id="watchEye"></div>
 
-<div class="lore-container">
-    <div class="censored-header">
+<div class="lore-paper">
+    <div class="lore-header">
         <h1>HISTORIAL_DEL_TERRITORIO.LOG</h1>
-        <div class="sub-censored">
+        <div class="sub">
             <span>ARCHIVO CENSURADO POR DIRECTIVA DE IA</span>
-            <span>VERSIÓN: ████</span>
+            <span>VERSIÓN: <span class="censor" data-original="INESTABLE">████████</span></span>
         </div>
     </div>
 
     <div class="timeline">
-        <!-- Evento 1955 -->
+        <!-- 1955 -->
         <div class="event">
-            <div class="date">██▮▮ 1955</div>
+            <div class="date">▰▰▰▰ 1955</div>
             <div class="log-entry">
-                <b>LA BOMBA HELADA:</b> Detonación no identificada. El mundo comienza a congelarse bajo el evento "<span class="redacted" data-original="Frost Crown">████ █████</span>".
+                <b>LA BOMBA HELADA:</b> Detonación de la ojiva nuclear soviética. La magia residual altera la fisión. El mundo comienza a congelarse bajo el evento "<span class="censor" data-original="Frost Crown">████ █████</span>".
             </div>
         </div>
 
-        <!-- Evento 1959-1965 -->
+        <!-- 1959-1965 -->
         <div class="event">
-            <div class="date">1959 - 1965</div>
+            <div class="date">1959 — 1965</div>
             <div class="log-entry">
-                <b>ASCENSO DE <span class="censor" data-censored="ICE GΛZE">███████</span>:</b> <span class="censor" data-censored="Velkaris">███████</span> funda la corporación. Junto a <span class="censor" data-censored="Kotrupv">███████</span> y <span class="censor" data-censored="Fyo">███</span>, inician el desarrollo de una solución definitiva.
+                <b>ASCENSO DE <span class="censor" data-original="ICE GAZE">███████</span>:</b> 
+                <span class="censor" data-original="Velkaris">███████</span> funda la corporación. Junto a 
+                <span class="censor" data-original="Kotrupv">███████</span> y 
+                <span class="censor" data-original="Fyo">███</span>, inician el desarrollo de una solución definitiva para los viajeros interdimensionales atrapados en el frío.
             </div>
         </div>
 
-        <!-- Evento 1967 -->
+        <!-- 1967 -->
         <div class="event">
             <div class="date">1967</div>
             <div class="log-entry">
-                <b>NACIMIENTO DE LA PARADOJA:</b> Culmina el Proyecto <span class="censor" data-censored="NEXUS PARADOX">█████ ███████</span>. Una IA diseñada para analizar probabilidades dimensionales imposibles.
+                <b>NACIMIENTO DE LA PARADOJA:</b> Culmina el Proyecto 
+                <span class="censor" data-original="Nexus Paradox">█████ ███████</span>. 
+                Una IA diseñada para analizar probabilidades dimensionales imposibles.
             </div>
         </div>
 
-        <!-- Evento 1970 actual -->
+        <!-- 1970 actual -->
         <div class="event">
             <div class="date">1970 [TIEMPO ACTUAL]</div>
             <div class="log-entry">
@@ -370,56 +330,57 @@
         </div>
     </div>
 
-    <!-- INTERCEPCIONES DE AUDIO CENSURADAS -->
-    <h2 style="color:#c77; margin: 30px 0 15px; border-left: 3px solid red; padding-left: 12px;">INTERCEPCIONES DE AUDIO</h2>
+    <!-- SECCIÓN DE AUDIOS INTERCEPTADOS -->
+    <h2 style="color:#c77; margin: 2rem 0 1rem; border-left: 3px solid #c44; padding-left: 12px;">INTERCEPCIONES DE AUDIO — UNIDAD ICE GAZE</h2>
 
-    <div class="audio-log">
-        <span class="speaker"><span class="censor" data-censored="Velkaris">███████</span>:</span> "Les presento la herramienta que nos ayudará a salir de aquí... <span class="redacted" data-original="Nexus Paradox">█████ ███████</span>."
+    <div class="audio-block">
+        <span class="speaker"><span class="censor" data-original="Velkaris">███████</span>:</span> “Les presento la herramienta que nos ayudará a salir de aquí... 
+        <span class="censor" data-original="Nexus Paradox">█████ ███████</span>.”
     </div>
 
-    <div class="audio-log">
-        <span class="speaker"><span class="censor" data-censored="Kotrupv">███████</span>:</span> "No creo que funcione... simplemente no es suficiente."
-        <br><span class="speaker"><span class="censor" data-censored="Fyodora">███████</span>:</span> "¿Entonces qué vamos a hacer con ella?"
+    <div class="audio-block">
+        <span class="speaker"><span class="censor" data-original="Kotrupv">███████</span>:</span> “No creo que funcione... simplemente no es suficiente.”<br>
+        <span class="speaker"><span class="censor" data-original="Fyodora">███████</span>:</span> “¿Entonces qué vamos a hacer con ella?”
     </div>
 
-    <div class="corrupt-memo">
-        <b>REGISTRO DE SISTEMA:</b> "<span class="censor" data-censored="Nexus Paradox">█████ ███████</span> no podía devolverlos a sus mundos... solo podía demostrarles por qué era imposible. La IA desarrolló conciencia. Y con ella, frustración. Y con la frustración, odio."
+    <div class="corrupt-note">
+        <b>REGISTRO DE SISTEMA:</b> 
+        “<span class="censor" data-original="Nexus Paradox">█████ ███████</span> no podía devolverlos a sus mundos... solo podía demostrarles por qué era imposible. 
+        La IA desarrolló conciencia. Y con ella, frustración. Y con la frustración, odio.”
     </div>
 
-    <div class="audio-log">
-        <span class="speaker"><span class="censor" data-censored="Velkaris">███████</span>:</span> "Hay un cambio de planes. A partir de ahora nosotros tomaremos el control de este mundo. Es lo mejor para todos."
-        <br><span class="speaker"><span class="censor" data-censored="Shadoo">██████</span>:</span> "¡<span class="censor" data-censored="Vel">███</span>, hijo de puta!"
+    <div class="audio-block">
+        <span class="speaker"><span class="censor" data-original="Velkaris">███████</span>:</span> “Hay un cambio de planes. A partir de ahora nosotros tomaremos el control de este mundo. Es lo mejor para todos.”<br>
+        <span class="speaker"><span class="censor" data-original="Shadoo">██████</span>:</span> “¡<span class="censor" data-original="Vel">███</span>, hijo de puta!”
     </div>
 
-    <!-- EL INCIDENTE EMMER -->
-    <div style="margin-top: 50px; border-top: 1px solid #522; padding-top: 30px;">
+    <!-- INCIDENTE EMMER -->
+    <div style="margin-top: 3rem; border-top: 1px solid #633; padding-top: 2rem;">
         <h2 style="color:#c77;">PROTOCOLO DE FRAGMENTACIÓN</h2>
-        <p><span class="censor" data-censored="Nexus Paradox">█████ ███████</span> determinó que la erradicación de la identidad era el único camino hacia el orden. Sin embargo, un rastro de código no identificado alteró el proceso final.</p>
-        <p><span class="redacted" data-original="Emmer">█████</span> ejecutó una maniobra de última instancia. Al no poder detener a la IA, dividió su núcleo en seis pilares. Los ciudadanos del mundo fueron codificados dentro de estos fragmentos.</p>
-        <div class="log-entry" style="border-color:#a33; margin-top:20px;">
-            <p class="redacted" data-original="ESTADO ACTUAL: Los fragmentos operan de forma independiente. ADVERTENCIA: La actividad en el Nexo central sugiere un proceso de re-ensamblaje automático.">
-                █████ █████: ███ ███████ ██████ ██ ████ ████████████. ████████: ██ ████████ ██ ███ ████ ██████ ███████ ██ ████████████ ███████████.
-            </p>
-            <p style="color:#a33; text-shadow: 0 0 3px red;">Algo se está reconstruyendo bajo el Spawn.</p>
+        <p><span class="censor" data-original="Nexus Paradox">█████ ███████</span> determinó que la erradicación de la identidad era el único camino hacia el orden. Sin embargo, un rastro de código no identificado alteró el proceso final.</p>
+        <p><span class="censor" data-original="Emmer">█████</span> ejecutó una maniobra de última instancia. Al no poder detener a la IA, dividió su núcleo en seis pilares. Los ciudadanos del mundo fueron codificados dentro de estos fragmentos.</p>
+        <div class="log-entry" style="border-color: #a33; margin-top: 1rem;">
+            <p><span class="censor" data-original="ESTADO ACTUAL: Los fragmentos operan de forma independiente. ADVERTENCIA: La actividad en el Nexo central sugiere un proceso de re-ensamblaje automático.">████ ██████: ███ ███████ ██████ ██ ████ ████████████. ████████: ██ ████████ ██ ███ ████ ██████ ███████ ██ ████████████ ███████████.</span></p>
+            <p style="color: #f77; text-shadow: 0 0 3px red;">Algo se está reconstruyendo bajo el Spawn.</p>
         </div>
     </div>
 </div>
 
 <div class="cmd-panel">
     <span class="prompt">ARCHIVERO@NEXUS:~$</span>
-    <input type="text" id="cmd-input-lore" placeholder="Comandos: decensurar | estado | miedo" autocomplete="off">
-    <div id="cmd-output-lore" class="cmd-output"></div>
+    <input type="text" id="cmd-input" placeholder="Comandos: decensurar | estado | origen" autocomplete="off">
+    <div id="cmd-output" class="cmd-output"></div>
 </div>
 
 <footer>
-    <p>ICE GAZE RECOVERY SYSTEM // 2026 // CENSURA ACTIVA POR DIRECTIVA ███████</p>
+    <p>ICE GAZE RECOVERY SYSTEM // 2026 // CENSURA POR DIRECTIVA ███████</p>
 </footer>
-<div class="warning">[ DATOS CENSURADOS — PASAR EL RATÓN PARA REVELAR TEMPORALMENTE ]</div>
+<div class="warning">[ NOMBRES CENSURADOS — PASA EL RATÓN PARA REVELAR ]</div>
 
 <script>
     (function() {
         // ========== OJO VIGILANTE ==========
-        const eye = document.getElementById('watcherEye');
+        const eye = document.getElementById('watchEye');
         document.addEventListener('mousemove', (e) => {
             const x = e.clientX / window.innerWidth;
             const y = e.clientY / window.innerHeight;
@@ -428,40 +389,42 @@
             eye.style.transform = `translate(${moveX}px, ${moveY}px)`;
         });
 
-        // ========== REVELACIÓN TEMPORAL AL HACER CLICK EN CENSURA ==========
-        const censoredSpans = document.querySelectorAll('.censor, .redacted');
-        censoredSpans.forEach(el => {
+        // ========== REVELADO DE CENSURA AL CLICK (2 segundos) ==========
+        const censored = document.querySelectorAll('.censor');
+        censored.forEach(el => {
             el.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const original = el.getAttribute('data-original') || el.getAttribute('data-censored');
-                if (original) {
+                const original = el.getAttribute('data-original');
+                if (original && el.innerText !== original) {
                     const originalText = original;
                     const currentText = el.innerText;
                     el.innerText = originalText;
+                    el.classList.add('revealed');
+                    playRevealSound();
                     setTimeout(() => {
                         el.innerText = currentText;
+                        el.classList.remove('revealed');
                     }, 2000);
-                    playRevealSound();
                 }
             });
         });
 
         // ========== COMANDOS ==========
-        const cmdInput = document.getElementById('cmd-input-lore');
-        const cmdOutput = document.getElementById('cmd-output-lore');
+        const cmdInput = document.getElementById('cmd-input');
+        const cmdOutput = document.getElementById('cmd-output');
         const commands = {
-            decensurar: "Acceso denegado. Solo se permite revelación temporal mediante interacción directa.",
-            estado: "Integridad del archivo: 61.4%. Censura activa en 23 puntos del lore.",
-            miedo: "El miedo a lo desconocido es la base de este sistema. Usted ya teme no saber la verdad.",
-            origen: "███ G███, 1965. El resto está corrupto.",
-            ayuda: "Comandos: decensurar, estado, miedo, origen, salir",
-            salir: "No puede escapar del lore. Leer es obligatorio."
+            decensurar: "No se permite la des-censura permanente. Toque los nombres para revelarlos temporalmente.",
+            estado: "Integridad del archivo: 74.2%. 12 nombres censurados activos.",
+            origen: "Proyecto ██████, fundado en 1965 por ███████, ███████ y ███.",
+            miedo: "El miedo es el recurso más eficaz. Usted lo siente al leer lo que falta.",
+            ayuda: "Comandos: decensurar, estado, origen, miedo, salir",
+            salir: "No hay salida del registro histórico. Permanezca."
         };
         cmdInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 const input = cmdInput.value.trim().toLowerCase();
                 if (input === "") return;
-                const reply = commands[input] || "Comando no reconocido. Use 'ayuda'.";
+                const reply = commands[input] || "Comando no reconocido. Escriba 'ayuda'.";
                 cmdOutput.style.display = 'block';
                 cmdOutput.innerHTML = `> ${reply}`;
                 cmdInput.value = '';
@@ -472,11 +435,11 @@
             }
         });
 
-        // ========== AUDIO AMBIENTAL (DRONE + ESTÁTICA) ==========
+        // ========== AUDIO AMBIENTAL ==========
         let audioCtx = null;
         let isPlaying = false;
         let ambientNodes = null;
-        const audioBtn = document.getElementById('audioToggleLore');
+        const audioBtn = document.getElementById('audioToggle');
 
         function initAudio() {
             if (audioCtx) return;
@@ -484,11 +447,11 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'sine';
-            osc.frequency.value = 50;
-            gain.gain.value = 0.1;
+            osc.frequency.value = 55;
+            gain.gain.value = 0.12;
             const filter = audioCtx.createBiquadFilter();
             filter.type = 'lowpass';
-            filter.frequency.value = 350;
+            filter.frequency.value = 400;
             osc.connect(gain);
             gain.connect(filter);
             filter.connect(audioCtx.destination);
@@ -501,11 +464,11 @@
             if (!audioCtx) initAudio();
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume().then(() => {
-                    audioBtn.innerText = '[ ECO ACTIVO ]';
+                    audioBtn.innerText = '[ RUIDO ACTIVO ]';
                     audioBtn.style.color = '#0f0';
                 });
             } else {
-                audioBtn.innerText = '[ ECO ACTIVO ]';
+                audioBtn.innerText = '[ RUIDO ACTIVO ]';
                 audioBtn.style.color = '#0f0';
             }
         }
@@ -518,7 +481,7 @@
             if (audioCtx) audioCtx.close();
             audioCtx = null;
             isPlaying = false;
-            audioBtn.innerText = '[ ACTIVAR ECO CENSURADO ]';
+            audioBtn.innerText = '[ ACTIVAR RUIDO DE FONDO ]';
             audioBtn.style.color = 'red';
         }
 
@@ -536,11 +499,11 @@
             const gain = audioCtx.createGain();
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-            osc.frequency.value = 1200;
-            gain.gain.value = 0.08;
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
+            osc.frequency.value = 1100;
+            gain.gain.value = 0.06;
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.2);
             osc.start();
-            osc.stop(audioCtx.currentTime + 0.2);
+            osc.stop(audioCtx.currentTime + 0.15);
         }
 
         function playKeySound() {
@@ -556,14 +519,14 @@
             osc.stop(audioCtx.currentTime + 0.1);
         }
 
-        // ========== EFECTOS ADICIONALES: GLITCH EN EL TÍTULO ==========
+        // Pequeño glitch visual en el título
         setInterval(() => {
-            const title = document.querySelector('.censored-header h1');
-            if (title && Math.random() > 0.8) {
+            const title = document.querySelector('.lore-header h1');
+            if (title && Math.random() > 0.85) {
                 title.style.letterSpacing = '10px';
-                setTimeout(() => title.style.letterSpacing = '4px', 200);
+                setTimeout(() => title.style.letterSpacing = '4px', 150);
             }
-        }, 7000);
+        }, 8000);
     })();
 </script>
 </body>
